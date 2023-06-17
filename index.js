@@ -28,4 +28,4 @@ app.get("/",(req,res)=>{
     res.sendFile(__dirname+"/public/index.html");
 })
 const PORT = process.env.PORT ||3000;
-app.listen(80,()=>{console.log("SERVER ON");})
+app.listen(PORT,()=>{console.log("SERVER ON");})
