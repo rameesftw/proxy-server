@@ -5,10 +5,96 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body>
+<body> <style>
+    #in{position:relative;
+    color:cyan;
+    background-color:black;
+
+        
+    }
+    .addbutton{
+        color:black;
+        position:relative;
+        width:44px;
+        height:24px;
+    }
+    .adddiv{
+         
+    }
+    .inputmenu{
+        position:absolute;
+        top:60%;
+        right:20%;
+    }
+    </style>
+
+
+
+<!--<div style="position: absolute;height: 100px;right:20%;width: 100px;"> <button onclick="loadchange()"> <img style="background-color:white;height:30px;width:30px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAMFJREFUOE+tlOsNwjAMhK8bMUI3ASYAJgE2KJt0BEZCV9mR5TqRseqf6eXz+ZFOOCimBOcimmWkzYBWAcz/gE4AzgAe5lIEegGgw6/qvCMKbiK6isiDCGCyN4B7D8RzL6RLBrNrog8A7d32sdejnXWBEUpAczJylBjkXqKOmIV1a7DZrZHuGl09zRnLXCzI1kzrIxBL12BPG6hUjr1Uabbfs+7UMuOnRvcsBEV7UlrIaE9KTyRqeunRRqDDfiOp1fgBiXguE19tom4AAAAASUVORK5CYII="></button></div>-->
+	<div class="main"> 
+		
+		<!-- top bar -->
+		<div class="top_bar">
+			<button onclick="sidebar()"><i class="bx bx-chevron-right"></i></button>
+			<div class="options">
+				<button><i class="bx bx-music"></i></button>
+				<button><i class="bx bxs-volume-low"></i></button>
+				<button><i class="bx bx-edit-alt"></i></button>
+			</div>
+			<button onclick="open_p()"><i class="bx bx-menu-alt-left"></i></button>
+		</div>
+
+		<div class="playing_part">
+			<div class="img">
+				<img src="" alt="img">
+			</div>
+		</div>
+
+		<!-- control part -->
+		<div class="control_part">
+			<div class="song_title">
+				<p>song title</p>
+				<p>artist name</p>
+			</div>
+
+			<div class="control_buttons">
+                
+				<div class="range_slider">
+                    <p id="current">0:00</p>
+					<input type="range" min="0" max="100" id="slider" value="0">
+					<p id="tot">6:34</p>
+				</div>
+
+				<div class="main_btns">
+					<button id="previous"><i class="bx bx-skip-previous"></i></button>
+					<button id="play_btn" onclick="play()"><i id="playimg" class="bx bx-play"></i></button>
+					<button id="previous" onclick="next()"><i class="bx bx-skip-next"></i></button>
+				</div>
+			</div>
+		</div>
+
+<audio id="audio" preload="metadata" src="https://pagalworldl.com/files/download/id/8972"></audio>
+		<!-- playlist songs -->
+		<div class="playlist" id="songdiv">
+			
+			<div class="p_song"><p id="p_title">song title</p><p id="p_artist">artistname</p><button onclick="playatlist(0)"><i class="bx bx-play" id="but0"></i></button></div><div class="p_song"><p id="p_title">song title</p><p id="p_artist">artistname</p><button onclick="playatlist(1)"><i class="bx bx-play" id="but1"></i></button></div><div class="p_song"><p id="p_title">song title</p><p id="p_artist">artistname</p><button onclick="playatlist(2)"><i class="bx bx-play" id="but2"></i></button></div><div class="p_song"><p id="p_title">song title</p><p id="p_artist">artistname</p><button onclick="playatlist(3)"><i class="bx bx-play" id="but3"></i></button></div><div class="p_song"><p id="p_title">song title</p><p id="p_artist">artistname</p><button onclick="playatlist(4)"><i class="bx bx-play" id="but4"></i></button></div><div class="p_song"><p id="p_title">song title</p><p id="p_artist">artistname</p><button onclick="playatlist(5)"><i class="bx bx-play" id="but5"></i></button></div><div class="p_song"><p id="p_title">song title</p><p id="p_artist">artistname</p><button onclick="playatlist(6)"><i class="bx bx-play" id="but6"></i></button></div><div class="p_song"><p id="p_title">song title</p><p id="p_artist">artistname</p><button onclick="playatlist(7)"><i class="bx bx-play" id="but7"></i></button></div><div class="p_song"><p id="p_title">song title</p><p id="p_artist">artistname</p><button onclick="playatlist(8)"><i class="bx bx-play" id="but8"></i></button></div></div>
+		</div>
+	
+    <style>.test{
+        transition:1s;
+        height:20px;
+    }
+    .test:hover{
+        height:40px;
+    }</style>
+   
+
     <input id="query" type="text"><button id="send">SEND</button>
     <audio id="AUDIO" src="" ></audio>
+
     <script>
         var v;
         document.getElementById("send").onclick = ()=>{fetch("/search/"+document.getElementById("query").value,{headers:{"Content-Type": "application/json"}}).then(res=>res.json()).then(
@@ -19,8 +105,24 @@
         }
         )}
        var audio = document.getElementById("AUDIO");
-       
+       document.getElementById("play_btn").onclick=()=>{audio.paused?audio.play():audio.pause();}
+       var playdur=(current)=>{
+var minutes,hour;
+var seconds = current;
+hour =Math.floor(Math.floor(seconds/ 60)/60);
+seconds = seconds-hour*60*60;
+minutes = Math.floor(seconds / 60); 
+let extraSeconds = Math.floor(seconds % 60);     
+let result ;
+minutes = minutes < 10 ? "0" + minutes : minutes;
+extraSeconds = extraSeconds < 10 ? "0" + extraSeconds : extraSeconds;
 
+if(hour!=0)result=hour+":"+minutes+":"+extraSeconds;else result=minutes+":"+extraSeconds;
+return result;
+
+       }
+audio.ondurationchange=(e)=>{console.log(e.target.duration);}
+audio.ontimeupdate=()=>{document.getElementById("current").innerText=playdur(audio.currentTime);}
     </script>
 
 </body>
