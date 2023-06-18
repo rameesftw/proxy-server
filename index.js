@@ -27,7 +27,8 @@ ytdl.getInfo(videoID).then(resp=>{
 
 //AIzaSyCdMdqblqRy4ObnC7IFI-xTz5rjO9qS0zc
 app.get("/",(req,res)=>{
-  console.log( req.headers['x-forwarded-for'] || req.socket.remoteAddress )
+  const ip= req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  console.log(ip);
     res.sendFile(__dirname+"/public/index.html");
 })
 const PORT = process.env.PORT ||3000;
