@@ -29,7 +29,7 @@ body{
   }
   #search{
   max-width: 400px;
-  height: 500px;
+  max-height: 400px;
   min-width: 354px;
   }
   #search button{
