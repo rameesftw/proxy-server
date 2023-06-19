@@ -31,21 +31,57 @@ body{
   max-width: 400px;
   max-height: 400px;
   min-width: 354px;
+  display: flex;
+  flex-direction:column;
+  
   }
-  #search button{
+  
+.searchPlay{
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    transition: 0.5s;
+    margin: 0 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.08);
+    box-shadow: 0.1px 8px 8px 2px rgba(0,0,0,0.2);
+}
+  #search #send{
     display: inline;
     background-color:#566573;
-    width:30px ;
-    height: 30px;
+    width:40px ;
+    height: 40px;
     border-radius: 10px;
     margin-left: 10px;
     outline: none;
     box-shadow: 0.1px 8px 8px 2px rgba(0,0,0,0.2); ;
   }
+  .mainDiv{
+    display: flex;
+    flex-direction: row;
+    background: #566573;
+    margin:10px;
+    margin-left: 0;
+    max-width: 340px;
+    border-radius: 10px;
+    padding: 4px;
+  }
+  .sugg{
+    width: 300px;
+    height: 40px;
+    margin-top: 10px;
+   
+    
+  }
  #query{
     outline: none;
   width:300px;
-  height: 30px;
+  height: 40px;
   color: #c8d2da;
   background-color: #5665734a;
   border-radius: 10px;

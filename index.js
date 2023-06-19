@@ -11,16 +11,21 @@ app.get("/search/:q",(req,res)=>{
   axios.get("https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyD4LkDVhw9RnkgprtkWLcc6fBi5u6LO5hg&type=video&q="+q)
   .then((axios)=>{return axios.data.items.map((value=>{return {videoid:value.id.videoId,title:value.snippet.title,thumbnail:value.snippet.thumbnails.medium}}))}).then((data)=>{
     const videoID = data[0].videoid;
+    res.json(data);
     
-    console.log(videoID);
-ytdl.getInfo(videoID).then(resp=>{
-    res.json({formats:resp.formats,data:data[0]});
-  })
+   
+
    
 })
 })
 
-
+app.get("/getUrl/:id",(req,res)=>{
+  ytdl.getInfo(req.params.id).then(resp=>{
+    
+    res.json(resp.formats);
+    
+  })
+})
 
 
 // Example of filtering the formats to audio only.

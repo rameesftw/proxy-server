@@ -38,6 +38,7 @@
         top: 60%;
         right: 20%;
       }
+      
     </style>
     <div class="search" id="search">
         <div id="searchbar">
@@ -171,6 +172,7 @@
     </style>
 
     <script>
+    var searchData=[];
       sidebar = () => {
         document.getElementById("options").classList.toggle("active2");
       };
@@ -179,23 +181,55 @@
       };
       var v;
       document.getElementById("send").onclick = () => {
+        document.getElementById("searchresults").innerHTML="";
         fetch("/search/" + document.getElementById("query").value, {
           headers: { "Content-Type": "application/json" },
         })
           .then((res) => res.json())
           .then((res) => {
-            console.log(res.data);
-            document.getElementById("img").src = res.data.thumbnail.url;
-            document.getElementById("title").innerText = res.data.title;
-            audio.src = res.formats
+            
+            searchData=res;
+            console.log(searchData);
+            for(var i=0;i<res.length;i++){
+                var p = document.createElement("p");
+                p.innerText=res[i].title;
+                var div = document.createElement("div")
+                var div2=document.createElement("div")
+                var button = document.createElement("button")
+                button.className="searchPlay";
+                button.setAttribute("onclick",`getUrl("${res[i].videoid}",${i})`) 
+                button.innerHTML='<i class="bx bx-play" ></i>'
+                div2.appendChild(button)
+
+                div.style.overflow="hidden"
+                div.className="sugg"
+                div.appendChild(p);
+                var mainDiv = document.createElement("div")
+                mainDiv.className="mainDiv"
+                mainDiv.append(div,div2)
+                document.getElementById("searchresults").appendChild(mainDiv);
+               
+            }
+            
+          });
+      };
+  
+      var getUrl=(videoID,i)=>{
+        audio.pause();
+        document.getElementById("title").innerText = searchData[i].title;
+        document.getElementById("img").src=searchData[i].thumbnail.url;
+        fetch("/getUrl/"+videoID,{headers:{"Content-Type": "application/json"}}).then(res=>res.json()).then(res=>{console.log(res);audio.src = res
               .map((value) => {
                 if (value.hasAudio) return value.url;
               })
               .filter((value) => {
                 if (value != undefined) return true;
               })[0];
-          });
-      };
+            audio.play();
+
+            })
+      }
+
       var audio = document.getElementById("AUDIO");
       document.getElementById("play_btn").onclick = () => {
         audio.paused ? audio.play() : audio.pause();
