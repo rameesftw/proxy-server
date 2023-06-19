@@ -6,7 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="style.css" />
-    <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
+    <link
+      href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
+      rel="stylesheet"
+    />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -36,9 +39,10 @@
         right: 20%;
       }
     </style>
-<div class="search" id="search"> <input id="query" type="text" /><button id="send">SEND</button>
-    <audio id="AUDIO" src=""></audio>
-   </div>
+    <div class="search" id="search">
+      <input id="query" type="text" /><button id="send"><i class='bx bx-search-alt-2' ></i></button>
+      <audio id="AUDIO" src=""></audio>
+    </div>
     <!--<div style="position: absolute;height: 100px;right:20%;width: 100px;"> <button onclick="loadchange()"> <img style="background-color:white;height:30px;width:30px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAMFJREFUOE+tlOsNwjAMhK8bMUI3ASYAJgE2KJt0BEZCV9mR5TqRseqf6eXz+ZFOOCimBOcimmWkzYBWAcz/gE4AzgAe5lIEegGgw6/qvCMKbiK6isiDCGCyN4B7D8RzL6RLBrNrog8A7d32sdejnXWBEUpAczJylBjkXqKOmIV1a7DZrZHuGl09zRnLXCzI1kzrIxBL12BPG6hUjr1Uabbfs+7UMuOnRvcsBEV7UlrIaE9KTyRqeunRRqDDfiOp1fgBiXguE19tom4AAAAASUVORK5CYII="></button></div>-->
     <div class="main">
       <!-- top bar -->
@@ -68,7 +72,7 @@
         <div class="control_buttons">
           <div class="range_slider">
             <p id="current">0:00</p>
-            <input type="range" min="0" max="100" id="slider" value=0 />
+            <input type="range" min="0" max="100" id="slider" value="0" />
             <p id="tot">0:00</p>
           </div>
 
@@ -84,7 +88,6 @@
         </div>
       </div>
 
-      
       <!-- playlist songs -->
       <div class="playlist" id="songdiv">
         <div class="p_song">
@@ -163,10 +166,13 @@
       }
     </style>
 
-   
     <script>
-        sidebar=()=>{document.getElementById("options").classList.toggle("active2")}
-        var open_p = ()=>{document.querySelector("#songdiv").classList.toggle("active")}
+      sidebar = () => {
+        document.getElementById("options").classList.toggle("active2");
+      };
+      var open_p = () => {
+        document.querySelector("#songdiv").classList.toggle("active");
+      };
       var v;
       document.getElementById("send").onclick = () => {
         fetch("/search/" + document.getElementById("query").value, {
@@ -174,9 +180,9 @@
         })
           .then((res) => res.json())
           .then((res) => {
-            console.log(res.data)
-            document.getElementById("img").src=res.data.thumbnail.url;
-            document.getElementById("title").innerText=res.data.title;
+            console.log(res.data);
+            document.getElementById("img").src = res.data.thumbnail.url;
+            document.getElementById("title").innerText = res.data.title;
             audio.src = res.formats
               .map((value) => {
                 if (value.hasAudio) return value.url;
@@ -184,17 +190,18 @@
               .filter((value) => {
                 if (value != undefined) return true;
               })[0];
-            
-            
           });
       };
       var audio = document.getElementById("AUDIO");
       document.getElementById("play_btn").onclick = () => {
         audio.paused ? audio.play() : audio.pause();
-        
       };
-      audio.onplay=()=>{document.getElementById("playimg").className="bx bx-pause"}
-      audio.onpause=()=>{document.getElementById("playimg").className="bx bx-play"}
+      audio.onplay = () => {
+        document.getElementById("playimg").className = "bx bx-pause";
+      };
+      audio.onpause = () => {
+        document.getElementById("playimg").className = "bx bx-play";
+      };
       var playdur = (current) => {
         var minutes, hour;
         var seconds = current;
@@ -210,19 +217,24 @@
         else result = minutes + ":" + extraSeconds;
         return result;
       };
-      audio.onload=()=>{ }
+      audio.onload = () => {};
       audio.ondurationchange = (e) => {
         document.getElementById("tot").innerText = playdur(e.target.duration);
-        
       };
       audio.ontimeupdate = (e) => {
-        document.getElementById("current").innerText = playdur(audio.currentTime);
-        var duration ;
-        if(!isNaN(audio.duration))duration=audio.duration;else duration=1;
-        
-        document.getElementById("slider").value = (audio.currentTime*100)/duration;
+        document.getElementById("current").innerText = playdur(
+          audio.currentTime
+        );
+        var duration;
+        if (!isNaN(audio.duration)) duration = audio.duration;
+        else duration = 1;
+
+        document.getElementById("slider").value =
+          (audio.currentTime * 100) / duration;
       };
-      document.getElementById("slider").oninput =(e)=>{audio.currentTime=(e.target.value*audio.duration)/100}
+      document.getElementById("slider").oninput = (e) => {
+        audio.currentTime = (e.target.value * audio.duration) / 100;
+      };
     </script>
   </body>
 </html>
