@@ -172,7 +172,8 @@
     </style>
 
     <script>
-    var searchData=[];
+    var searchData={};
+    
       sidebar = () => {
         document.getElementById("options").classList.toggle("active2");
       };
@@ -187,8 +188,9 @@
         })
           .then((res) => res.json())
           .then((res) => {
-            
-            searchData=res;
+            document.getElementById("searchresults").innerHTML="";
+            searchData.data=res;
+            searchData.buttons=[];
             console.log(searchData);
             for(var i=0;i<res.length;i++){
                 var p = document.createElement("p");
@@ -198,6 +200,7 @@
                 var button = document.createElement("button")
                 button.className="searchPlay";
                 button.setAttribute("onclick",`getUrl("${res[i].videoid}",${i})`) 
+                searchData.buttons.push(button)
                 button.innerHTML='<i class="bx bx-play" ></i>'
                 div2.appendChild(button)
 
@@ -215,9 +218,25 @@
       };
   
       var getUrl=(videoID,i)=>{
-        audio.pause();
-        document.getElementById("title").innerText = searchData[i].title;
-        document.getElementById("img").src=searchData[i].thumbnail.url;
+        searchData.prev=searchData.now;
+        searchData.now=searchData.buttons[i];
+        
+        if(searchData.prev==searchData.now){
+          
+         
+          if(audio.paused){audio.play();searchData.buttons[i].innerHTML=`<i class="bx bx-pause" ></i>`}else{ audio.pause();searchData.buttons[i].innerHTML=`<i class="bx bx-play" ></i>`;}
+          console.log("same")
+          
+        }else{
+          audio.pause();
+          document.getElementById("slider").value=0;
+          document.getElementById("tot").innerText="0.00";
+          
+
+        // searchData.buttons[i].innerHTML=`<i class="bx bx-pause" ></i>`
+        if(searchData.prev !== undefined){searchData.prev.innerHTML=`<i class="bx bx-play" ></i>`}
+        document.getElementById("title").innerText = searchData.data[i].title;
+        document.getElementById("img").src=searchData.data[i].thumbnail.url;
         fetch("/getUrl/"+videoID,{headers:{"Content-Type": "application/json"}}).then(res=>res.json()).then(res=>{console.log(res);audio.src = res
               .map((value) => {
                 if (value.hasAudio) return value.url;
@@ -228,17 +247,17 @@
             audio.play();
 
             })
-      }
+      }}
 
       var audio = document.getElementById("AUDIO");
       document.getElementById("play_btn").onclick = () => {
         audio.paused ? audio.play() : audio.pause();
       };
       audio.onplay = () => {
-        document.getElementById("playimg").className = "bx bx-pause";
+        document.getElementById("playimg").className = "bx bx-pause";searchData.now.innerHTML='<i class="bx bx-pause" ></i>'
       };
       audio.onpause = () => {
-        document.getElementById("playimg").className = "bx bx-play";
+        document.getElementById("playimg").className = "bx bx-play";searchData.now.innerHTML='<i class="bx bx-play" ></i>'
       };
       var playdur = (current) => {
         var minutes, hour;
