@@ -191,7 +191,7 @@
             document.getElementById("searchresults").innerHTML="";
             searchData.data=res;
             searchData.buttons=[];
-            console.log(searchData);
+           
             for(var i=0;i<res.length;i++){
                 var p = document.createElement("p");
                 p.innerText=res[i].title;
@@ -225,7 +225,7 @@
           
          
           if(audio.paused){audio.play();searchData.buttons[i].innerHTML=`<i class="bx bx-pause" ></i>`}else{ audio.pause();searchData.buttons[i].innerHTML=`<i class="bx bx-play" ></i>`;}
-          console.log("same")
+         
           
         }else{
           audio.pause();
@@ -237,7 +237,7 @@
         if(searchData.prev !== undefined){searchData.prev.innerHTML=`<i class="bx bx-play" ></i>`}
         document.getElementById("title").innerText = searchData.data[i].title;
         document.getElementById("img").src=searchData.data[i].thumbnail.url;
-        fetch("/getUrl/"+videoID,{headers:{"Content-Type": "application/json"}}).then(res=>res.json()).then(res=>{console.log(res);audio.src = res
+        fetch("/getUrl/"+videoID,{headers:{"Content-Type": "application/json"}}).then(res=>res.json()).then(res=>{audio.src = res
               .map((value) => {
                 if (value.hasAudio) return value.url;
               })
