@@ -37,3 +37,6 @@ app.get("/",(req,res)=>{
 })
 const PORT = process.env.PORT ||3000;
 app.listen(PORT,()=>{console.log("SERVER ON");})
+setInterval(()=>{
+  axios.get("https://ytomp3.onrender.com")
+},720000)
