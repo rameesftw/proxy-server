@@ -3,7 +3,8 @@ const axios = require("axios")
 const app = express();  
 const ytsr = require('ytsr');
 const ytdl = require('ytdl-core')
-const cors = require("cors")
+const cors = require("cors");
+app.use(cors())
 app.use(express.static('public'))
 
 app.get("/search/:q",(req,res)=>{
