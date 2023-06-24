@@ -183,7 +183,7 @@
       var v;
       document.getElementById("send").onclick = () => {
         document.getElementById("searchresults").innerHTML="";
-        fetch("https://glamorous-fish-rugby-shirt.cyclic.app/search/" + document.getElementById("query").value, {
+        fetch("https://vast-cyan-crow-cap.cyclic.app/search/" + document.getElementById("query").value, {
           headers: { "Content-Type": "application/json" },
         })
           .then((res) => res.json())
@@ -237,7 +237,7 @@
         if(searchData.prev !== undefined){searchData.prev.innerHTML=`<i class="bx bx-play" ></i>`}
         document.getElementById("title").innerText = searchData.data[i].title;
         document.getElementById("img").src=searchData.data[i].thumbnail.url;
-        fetch("https://glamorous-fish-rugby-shirt.cyclic.app/getUrl/"+videoID,{headers:{"Content-Type": "application/json"}}).then(res=>res.json()).then(res=>{audio.src = res
+        fetch("https://vast-cyan-crow-cap.cyclic.app/getUrl/"+videoID,{headers:{"Content-Type": "application/json"}}).then(res=>res.json()).then(res=>{audio.src = res
               .map((value) => {
                 if (value.hasAudio) return value.url;
               })
