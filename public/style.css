@@ -1,3 +1,9 @@
+#searchButtons{
+
+	display: flex;
+	flex-direction: row;
+}
+
 *{
 	margin: 0;
 	padding: 0;
@@ -44,7 +50,7 @@ body{
     border: none;
     cursor: pointer;
     transition: 0.5s;
-    margin: 0 18px;
+    margin: 0 1px;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>TYMP3</title>
+    <link rel="stylesheet" href="/src/style.css" />
     <link
       href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
       rel="stylesheet"
@@ -20,6 +20,7 @@
   </head>
   <body>
     <style>
+      
       #in {
         position: relative;
         color: cyan;
@@ -54,8 +55,8 @@
       <div class="top_bar">
         <button onclick="sidebar()"><i class="bx bx-chevron-right"></i></button>
         <div id="options" class="options">
+          <button id="mute"><i class="bx bxs-volume-full"></i></button>
           <button><i class="bx bx-music"></i></button>
-          <button><i class="bx bxs-volume-low"></i></button>
           <button><i class="bx bx-edit-alt"></i></button>
         </div>
         <button onclick="open_p()"><i class="bx bx-menu-alt-left"></i></button>
@@ -63,7 +64,7 @@
 
       <div class="playing_part">
         <div class="img">
-          <img id="img" src="" alt="img" />
+          <img id="img" src="" alt="img" draggable="false" />
         </div>
       </div>
 
@@ -150,8 +151,7 @@
           <button onclick="playatlist(7)">
             <i class="bx bx-play" id="but7"></i>
           </button>
-        </div>
-        <div class="p_song">
+        </div>        <div class="p_song">
           <p id="p_title">song title</p>
           <p id="p_artist">artistname</p>
           <button onclick="playatlist(8)">
@@ -171,127 +171,6 @@
       }
     </style>
 
-    <script>
-    var searchData={};
-    
-      sidebar = () => {
-        document.getElementById("options").classList.toggle("active2");
-      };
-      var open_p = () => {
-        document.querySelector("#songdiv").classList.toggle("active");
-      };
-      var v;
-      document.getElementById("send").onclick = () => {
-        document.getElementById("searchresults").innerHTML="";
-        fetch("https://vast-cyan-crow-cap.cyclic.app/search/" + document.getElementById("query").value, {
-          headers: { "Content-Type": "application/json" },
-        })
-          .then((res) => res.json())
-          .then((res) => {
-            document.getElementById("searchresults").innerHTML="";
-            searchData.data=res;
-            searchData.buttons=[];
-           
-            for(var i=0;i<res.length;i++){
-                var p = document.createElement("p");
-                p.innerText=res[i].title;
-                var div = document.createElement("div")
-                var div2=document.createElement("div")
-                var button = document.createElement("button")
-                button.className="searchPlay";
-                button.setAttribute("onclick",`getUrl("${res[i].videoid}",${i})`) 
-                searchData.buttons.push(button)
-                button.innerHTML='<i class="bx bx-play" ></i>'
-                div2.appendChild(button)
-
-                div.style.overflow="hidden"
-                div.className="sugg"
-                div.appendChild(p);
-                var mainDiv = document.createElement("div")
-                mainDiv.className="mainDiv"
-                mainDiv.append(div,div2)
-                document.getElementById("searchresults").appendChild(mainDiv);
-               
-            }
-            
-          });
-      };
-  
-      var getUrl=(videoID,i)=>{
-        searchData.prev=searchData.now;
-        searchData.now=searchData.buttons[i];
-        
-        if(searchData.prev==searchData.now){
-          
-         
-          if(audio.paused){audio.play();searchData.buttons[i].innerHTML=`<i class="bx bx-pause" ></i>`}else{ audio.pause();searchData.buttons[i].innerHTML=`<i class="bx bx-play" ></i>`;}
-         
-          
-        }else{
-          audio.pause();
-          document.getElementById("slider").value=0;
-          document.getElementById("tot").innerText="0.00";
-          
-
-        // searchData.buttons[i].innerHTML=`<i class="bx bx-pause" ></i>`
-        if(searchData.prev !== undefined){searchData.prev.innerHTML=`<i class="bx bx-play" ></i>`}
-        document.getElementById("title").innerText = searchData.data[i].title;
-        document.getElementById("img").src=searchData.data[i].thumbnail.url;
-        fetch("https://vast-cyan-crow-cap.cyclic.app/getUrl/"+videoID,{headers:{"Content-Type": "application/json"}}).then(res=>res.json()).then(res=>{audio.src = res
-              .map((value) => {
-                if (value.hasAudio) return value.url;
-              })
-              .filter((value) => {
-                if (value != undefined) return true;
-              })[0];
-            audio.play();
-
-            })
-      }}
-
-      var audio = document.getElementById("AUDIO");
-      document.getElementById("play_btn").onclick = () => {
-        audio.paused ? audio.play() : audio.pause();
-      };
-      audio.onplay = () => {
-        document.getElementById("playimg").className = "bx bx-pause";searchData.now.innerHTML='<i class="bx bx-pause" ></i>'
-      };
-      audio.onpause = () => {
-        document.getElementById("playimg").className = "bx bx-play";searchData.now.innerHTML='<i class="bx bx-play" ></i>'
-      };
-      var playdur = (current) => {
-        var minutes, hour;
-        var seconds = current;
-        hour = Math.floor(Math.floor(seconds / 60) / 60);
-        seconds = seconds - hour * 60 * 60;
-        minutes = Math.floor(seconds / 60);
-        let extraSeconds = Math.floor(seconds % 60);
-        let result;
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        extraSeconds = extraSeconds < 10 ? "0" + extraSeconds : extraSeconds;
-
-        if (hour != 0) result = hour + ":" + minutes + ":" + extraSeconds;
-        else result = minutes + ":" + extraSeconds;
-        return result;
-      };
-      audio.onload = () => {};
-      audio.ondurationchange = (e) => {
-        document.getElementById("tot").innerText = playdur(e.target.duration);
-      };
-      audio.ontimeupdate = (e) => {
-        document.getElementById("current").innerText = playdur(
-          audio.currentTime
-        );
-        var duration;
-        if (!isNaN(audio.duration)) duration = audio.duration;
-        else duration = 1;
-
-        document.getElementById("slider").value =
-          (audio.currentTime * 100) / duration;
-      };
-      document.getElementById("slider").oninput = (e) => {
-        audio.currentTime = (e.target.value * audio.duration) / 100;
-      };
-    </script>
+<script src="/src/script.js"></script>
   </body>
 </html>
