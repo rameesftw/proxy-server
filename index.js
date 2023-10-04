@@ -1,44 +1,35 @@
-const express = require("express")
-const axios = require("axios")
-const app = express();  
-const ytsr = require('ytsr');
-const ytdl = require('ytdl-core')
-const cors = require("cors");
-app.use(cors())
-app.use(express.static('public'))
+const {express,session,client,axios, uuid,app,store, ytdl,cors,cookieParser,save, main, loginRoute} = require("./server/app.js");
 
-app.get("/search/:q",(req,res)=>{
-  const q = req.params.q;
-  console.log( req.headers['x-forwarded-for'] || req.socket.remoteAddress )  
-  axios.get("https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyD4LkDVhw9RnkgprtkWLcc6fBi5u6LO5hg&type=video&q="+q)
-  .then((axios)=>{return axios.data.items.map((value=>{return {videoid:value.id.videoId,title:value.snippet.title,thumbnail:value.snippet.thumbnails.medium}}))}).then((data)=>{  
-    res.json(data);
-    
-   
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json())
+app.use(cookieParser());
+app.use(session);
+app.use(main)
+app.use(loginRoute)
+app.use("/src",(req,res,next)=>{
+  // if(req.session==undefined){
+  //   res.sendFile(__dirname+"/public/login.html");
+  //   return;
+  // }
+next();
 
-   
 })
-})
-
-app.get("/getUrl/:id",(req,res)=>{
-  ytdl.getInfo(req.params.id).then(resp=>{
-    
-    res.json(resp.formats);
-    
-  })
-})
-
-
-// Example of filtering the formats to audio only.
-
+app.use("/src",express.static("public"));
 //AIzaSyCdMdqblqRy4ObnC7IFI-xTz5rjO9qS0zc
-app.get("/",(req,res)=>{
-  const ip= req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-  console.log(ip);
-    res.sendFile(__dirname+"/public/index.html");
-})
-const PORT = process.env.PORT ||3000;
-app.listen(PORT,()=>{console.log("SERVER ON");})
-setInterval(()=>{
-  axios.get("https://ytomp3.onrender.com")
-},720000)
+app.get("/", (req, res) => {
+  
+  if(req.session==undefined)res.sendFile(__dirname+"/public/login.html");
+  else{res.sendFile(__dirname + "/public/index.html");req.session.isFirst=false}   
+save(req);
+});
+
+
+const PORT = 3000;
+
+app.listen(PORT, () => {
+  console.log("SERVER ON");
+});
+setInterval(() => {
+  axios.get("https://ytomp3.onrender.com").catch(err=>{throw err;});
+}, 720000);
