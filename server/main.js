@@ -47,8 +47,8 @@ main.get('/download/file/:query', (req, res) => {
       res.redirect("https://vast-cyan-crow-cap.cyclic.app/download/file/"+videoURL)
     }).pipe(res);
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Internal Server Error');
+    console.log('Error:', error);
+    res.send('Internal Server Error');
   }
 
   res.setHeader('Content-Disposition', `attachment; filename="ytomp3-music-name.mp3"`);
