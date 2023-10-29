@@ -36,9 +36,8 @@ main.get('/download/file/:query', (req, res) => {
     return res.status(400).send('Please provide a valid YouTube video URL.');
   }
 
-  let stream;
+  var stream;
 
-  try {
     ytdl(videoURL, {
       quality: 'highestaudio',
       filter: 'audioonly',
@@ -46,10 +45,7 @@ main.get('/download/file/:query', (req, res) => {
       console.error('Error:',error);
       res.redirect("https://vast-cyan-crow-cap.cyclic.app/download/file/"+videoURL)
     }).pipe(res);
-  } catch (error) {
-    console.log('Error:', error);
-    res.send('Internal Server Error');
-  }
+  
 
   res.setHeader('Content-Disposition', `attachment; filename="ytomp3-music-name.mp3"`);
   res.setHeader('Content-Type', 'audio/mpeg');
