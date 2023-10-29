@@ -13,7 +13,7 @@ main.get("/audio/search/:q", (req, res) => {
   console.log(req.headers["x-forwarded-for"] || req.socket.remoteAddress);
   axios
     .get(
-      "https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyD4LkDVhw9RnkgprtkWLcc6fBi5u6LO5hg&type=video&q=" +
+      "https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyD-eKz53eTLx3XQdIctqCuGrdbrzF8iD08=video&q=" +
         q
     )
     .then((axios) => {
@@ -59,7 +59,7 @@ main.get("/search/:q", (req, res) => {
   console.log(req.headers["x-forwarded-for"] || req.socket.remoteAddress);
   axios
     .get(
-      "https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyD4LkDVhw9RnkgprtkWLcc6fBi5u6LO5hg&type=video&q=" +
+      "https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyD-eKz53eTLx3XQdIctqCuGrdbrzF8iD08&type=video&q=" +
         q
     )
     .then((axios) => {
