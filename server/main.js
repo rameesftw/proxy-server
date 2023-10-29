@@ -41,7 +41,7 @@ main.get('/download/file/:query', (req, res) => {
       filter: 'audioonly',
     }).on('error', (error) => {
       console.error('Error:',error);
-      res.redirect("https://vast-cyan-crow-cap.cyclic.app/file/download/"+videoURL)
+      res.redirect("https://vast-cyan-crow-cap.cyclic.app/download/file/"+videoURL)
     }).pipe(res);
   } catch (error) {
     console.error('Error:', error);
