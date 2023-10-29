@@ -16,6 +16,7 @@ app.use("/src",(req,res,next)=>{
 next();
 
 })
+app.get("/sitemap.xml",(req,res)=>res.sendFile(__dirname+"/public/sitemap.xml"))
 app.get("/home",(req,res)=>res.render('home'))
 app.use("/src",express.static("public"));
 //AIzaSyCdMdqblqRy4ObnC7IFI-xTz5rjO9qS0zc
