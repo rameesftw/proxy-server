@@ -4,6 +4,9 @@ const axios = require("axios");
 const ytdl = require("ytdl-core");
 const { client, handleDb } = require("./session");
 
+main.get("/audio/search",(req,res)=>{
+  res.render('search')
+})
 main.get("/audio/search/:q", (req, res) => {
   let q = req.params.q;
   q=q.replace("-download-mp3","")
