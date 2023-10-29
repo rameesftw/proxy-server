@@ -1,5 +1,5 @@
 const {express,session,client,axios, uuid,app,store, ytdl,cors,cookieParser,save, main, loginRoute} = require("./server/app.js");
-
+app.set('view engine', 'ejs');
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
@@ -7,6 +7,7 @@ app.use(cookieParser());
 app.use(session);
 app.use(main)
 app.use(loginRoute)
+
 app.use("/src",(req,res,next)=>{
   // if(req.session==undefined){
   //   res.sendFile(__dirname+"/public/login.html");

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Song Details</title>
+    <style>
+        .song-container {
+            background-color: #fff; /* White background */
+            border-radius: 10px;
+            box-shadow: 0.1px 8px 8px 2px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            color: #1C2833; /* Dark text color */
+        }
+
+        .song-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .artist-name {
+            font-size: 18px;
+            color: #3498db; /* Blue artist name color */
+        }
+
+        .song-description {
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .download-link {
+            display: inline-block;
+            background-color: #3498db; /* Blue download button background color */
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 18px;
+            margin-top: 20px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .download-link:hover {
+            background-color: #1C2833; /* Dark button background color on hover */
+            color: #fff; /* White text color on hover */
+        }
+
+        .custom-audio-player {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        audio {
+            width: 100%;
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #1C2833;
+        }
+
+        input[type="range"] {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="song-container">
+        <div class="song-title"><%= title %></div>
+        <div class="artist-name">artist </div>
+        <div class="song-description">
+            <%= description %>
+        </div>
+        <div class="custom-audio-player">
+            <audio id="custom-audio" preload="none">
+                <source src="/<%= downloadUrl %>" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <div class="audio-controls">
+                <button id="play-pause-button" class="play">Play</button>
+                <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
+            </div>
+        </div>
+        <a class="download-link" href="/<%= downloadUrl %>">Download mp3</a>
+        <div class="keywords">
+            Keywords: <%= title %> mp3 download,  song,  artist, music, genre
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const audio = document.getElementById("custom-audio");
+            const playPauseButton = document.getElementById("play-pause-button");
+            const volumeSlider = document.getElementById("volume-slider");
+
+            playPauseButton.addEventListener("click", function () {
+                if (audio.paused) {
+                    audio.play();
+                    playPauseButton.innerText = "Pause";
+                } else {
+                    audio.pause();
+                    playPauseButton.innerText = "Play";
+                }
+            });
+
+            volumeSlider.addEventListener("input", function () {
+                audio.volume = volumeSlider.value;
+            });
+        });
+    </script>
+</body>
+</html>
