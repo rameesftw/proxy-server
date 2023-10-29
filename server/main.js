@@ -40,7 +40,7 @@ main.get('/download/file/:query', (req, res) => {
       quality: 'highestaudio',
       filter: 'audioonly',
     }).on('error', (error) => {
-      console.error('Error:');
+      console.error('Error:',error);
       res.status(404).send('Video not found');
     }).pipe(res);
   } catch (error) {
