@@ -40,8 +40,8 @@ main.get('/download/file/:query', (req, res) => {
   }
 
   const stream = ytdl(videoID, {
-    quality: 'highestaudio',
-   // filter: 'audioonly',
+   // quality: 'highestaudio',
+    filter: 'audioonly',
   });
 
   stream.on('error', (error) => {
