@@ -3,7 +3,10 @@ const main = express.Router();
 const axios = require("axios");
 const ytdl = require("ytdl-core");
 const { client, handleDb } = require("./session");
+const HttpsProxyAgent = require('https-proxy-agent');
 
+const proxy = '182.16.171.65:51459'; // Proxy URL without authentication
+const agent = new HttpsProxyAgent(proxy);
 main.get("/audio/search",(req,res)=>{
   res.render('search')
 })
@@ -26,38 +29,28 @@ main.get("/audio/search/:q", (req, res) => {
   res.render('index', render);
 }).catch((err)=>{console.log(err);})})
 
-main.get('/download/file/:query', (req, res) => {
-  const videoID = req.params.query; // Get the YouTube video ID from the query parameter
+main.get('/download/file/:query', async (req, res) => {
+  const videoURL = req.params.query; // Get the video URL from the query parameter
 
-  if (!videoID) {
-    return res.status(400).send('Please provide a valid YouTube video ID.');
+  if (!videoURL) {
+    return res.status(400).send('Please provide a valid YouTube video URL.');
   }
 
-  res.setHeader('Content-Disposition', 'attachment; filename="ytomp3-music-name.mp3"');
-  res.setHeader('Content-Type', 'audio/mpeg');
-
-  const videoStream = ytdl(videoID, {
-    quality: 'highestaudio',
-    filter: 'audioonly',
-  });
-
-  videoStream.on('error', (error) => {
+  // Use ytdl-core to fetch video data
+  try {
+    const videoInfo = await ytdl.getInfo(videoURL);
+    const stream = ytdl(videoURL, {
+      quality: 'highestaudio',
+      filter: 'audioonly',
+      requestOptions:{agent}
+    });
+    res.set('Content-Type', 'audio/mpeg');
+    stream.pipe(res);
+  } catch (error) {
     console.error('Error:', error);
-    return res.status(500).send('An error occurred while processing the video.');
-  });
-
-  videoStream.on('info', (info, format) => {
-    // Read video content in chunks and send as buffers
-    videoStream.on('data', (chunk) => {
-      res.write(chunk);
-    });
-
-    videoStream.on('end', () => {
-      res.end();
-    });
-  });
+    return res.status(500).send('An error occurred while fetching the video.');
+  }
 });
-
 
 main.get("/search/:q", (req, res) => {
   const q = req.params.q;
