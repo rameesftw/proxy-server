@@ -41,7 +41,7 @@ main.get('/download/file/:query', (req, res) => {
 
   const stream = ytdl(videoID, {
     quality: 'highestaudio',
-    filter: 'audioonly',
+   // filter: 'audioonly',
   });
 
   stream.on('error', (error) => {
