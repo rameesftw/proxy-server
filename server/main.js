@@ -36,21 +36,24 @@ main.get('/download/file/:query', (req, res) => {
     return res.status(400).send('Please provide a valid YouTube video URL.');
   }
 
-  var stream;
+  const stream = ytdl(videoURL, {
+    quality: 'highestaudio',
+    filter: 'audioonly',
+  });
 
-    ytdl(videoURL, {
-      quality: 'highestaudio',
-      filter: 'audioonly',
-    }).on('error', (error) => {
-      console.error('Error:',error);
-      
-      //res.redirect("https://vast-cyan-crow-cap.cyclic.app/download/file/"+videoURL)
-    }).pipe(res);
-  console.log(req.get('host'))
+  stream.on('error', (error) => {
+    console.error('Error:', error);
+    return res.status(500).send('An error occurred while processing the video.');
+  });
 
-  res.setHeader('Content-Disposition', `attachment; filename="ytomp3-music-name.mp3"`);
-  res.setHeader('Content-Type', 'audio/mpeg');
+  stream.on('info', (info, format) => {
+    res.setHeader('Content-Disposition', `attachment; filename="ytomp3-music-name.mp3"`);
+    res.setHeader('Content-Type', 'audio/mpeg');
+  });
+
+  stream.pipe(res);
 });
+
 main.get("/search/:q", (req, res) => {
   const q = req.params.q;
   console.log(req.headers["x-forwarded-for"] || req.socket.remoteAddress);
