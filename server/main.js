@@ -42,8 +42,9 @@ main.get('/download/file/:query', (req, res) => {
   });
 
   stream.on('error', (error) => {
-    console.error('Error:', error);
-    return res.status(500).send('An error occurred while processing the video.');
+    console.log('Error:', error);
+    res.status(500).send('An error occurred while processing the video.');
+    return;
   });
 
   stream.on('info', (info, format) => {
