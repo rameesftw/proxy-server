@@ -29,8 +29,8 @@ main.get("/audio/search/:q", (req, res) => {
 
 
 
-main.get('/download/file/:query', (req, res) => {
-  const videoURL = req.params.query; // Get the YouTube video URL from the query parameter
+main.get('/download/file', (req, res) => {
+  const videoURL = req.query.url; // Get the YouTube video URL from the query parameter
 
   if (!videoURL) {
     return res.status(400).send('Please provide a valid YouTube video URL.');
