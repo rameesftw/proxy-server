@@ -50,7 +50,7 @@ main.get('/download/file/:query', (req, res) => {
   });
 
   stream.on('info', (info, format) => {
-    ytdl.downloadFromInfo(info).pipe(res)
+    
     const filename = 'ytomp3-music-name.mp3';
     const filePath = path.join('/tmp', filename);
 
@@ -61,7 +61,7 @@ main.get('/download/file/:query', (req, res) => {
       return res.status(500).send('An error occurred while saving the file.');
     });
 
-    stream.pipe(fileWriteStream);
+    console.log(stream)
 
     fileWriteStream.on('finish', () => {
       // Now that the file is saved in /tmp, send it to the client using res.sendFile
