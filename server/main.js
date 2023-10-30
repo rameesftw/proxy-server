@@ -1,7 +1,7 @@
 const express = require("express");
 const main = express.Router();
 const axios = require("axios");
-const ytdl = require("@distube/ytdl-core");
+const ytdl = require("ytdl-core");
 const { client, handleDb } = require("./session");
 
 main.get("/audio/search",(req,res)=>{
@@ -26,12 +26,6 @@ main.get("/audio/search/:q", (req, res) => {
   res.render('index', render);
 }).catch((err)=>{console.log(err);})})
 
-
-
-
-const fs = require('fs');
-const path = require('path');
-
 main.get('/download/file/:query', (req, res) => {
   const videoID = req.params.query; // Get the YouTube video ID from the query parameter
 
@@ -39,41 +33,30 @@ main.get('/download/file/:query', (req, res) => {
     return res.status(400).send('Please provide a valid YouTube video ID.');
   }
 
-  const stream = ytdl(videoID, {
-   // quality: 'highestaudio',
+  res.setHeader('Content-Disposition', 'attachment; filename="ytomp3-music-name.mp3"');
+  res.setHeader('Content-Type', 'audio/mpeg');
+
+  const videoStream = ytdl(videoID, {
+    quality: 'highestaudio',
     filter: 'audioonly',
   });
 
-  stream.on('error', (error) => {
+  videoStream.on('error', (error) => {
     console.error('Error:', error);
     return res.status(500).send('An error occurred while processing the video.');
   });
 
-  stream.on('info', (info, format) => {
-    
-    const filename = 'ytomp3-music-name.mp3';
-    const filePath = path.join('/tmp', filename);
-
-    const fileWriteStream = fs.createWriteStream(filePath);
-
-    fileWriteStream.on('error', (error) => {
-      console.error('Error writing to file:', error);
-      return res.status(500).send('An error occurred while saving the file.');
+  videoStream.on('info', (info, format) => {
+    // Read video content in chunks and send as buffers
+    videoStream.on('data', (chunk) => {
+      res.write(chunk);
     });
 
-    console.log(stream)
-
-    fileWriteStream.on('finish', () => {
-      // Now that the file is saved in /tmp, send it to the client using res.sendFile
-      res.sendFile(filePath, {
-        headers: {
-          'Content-Disposition': `attachment; filename="${filename}"`,
-        },
-      });
+    videoStream.on('end', () => {
+      res.end();
     });
   });
 });
-
 
 
 main.get("/search/:q", (req, res) => {
