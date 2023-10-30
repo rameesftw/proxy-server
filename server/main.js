@@ -29,6 +29,9 @@ main.get("/audio/search/:q", (req, res) => {
 
 
 
+const fs = require('fs');
+const path = require('path');
+
 main.get('/download/file/:query', (req, res) => {
   const videoID = req.params.query; // Get the YouTube video ID from the query parameter
 
@@ -42,19 +45,32 @@ main.get('/download/file/:query', (req, res) => {
   });
 
   stream.on('error', (error) => {
-    console.log('Error:', error);
-    res.status(500).send('An error occurred while processing the video.');
-    return;
+    console.error('Error:', error);
+    return res.status(500).send('An error occurred while processing the video.');
   });
 
   stream.on('info', (info, format) => {
-    // Set the Content-Disposition header to specify the filename
-    console.log(format)
-    res.setHeader('Content-Disposition', `attachment; filename="ytomp3-music-name.mp3"`);
-    res.setHeader('Content-Type', 'audio/mpeg');
-  });
+    const filename = 'ytomp3-music-name.mp3';
+    const filePath = path.join('/tmp', filename);
 
-  stream.pipe(res);
+    const fileWriteStream = fs.createWriteStream(filePath);
+
+    fileWriteStream.on('error', (error) => {
+      console.error('Error writing to file:', error);
+      return res.status(500).send('An error occurred while saving the file.');
+    });
+
+    stream.pipe(fileWriteStream);
+
+    fileWriteStream.on('finish', () => {
+      // Now that the file is saved in /tmp, send it to the client using res.sendFile
+      res.sendFile(filePath, {
+        headers: {
+          'Content-Disposition': `attachment; filename="${filename}"`,
+        },
+      });
+    });
+  });
 });
 
 
