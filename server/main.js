@@ -50,7 +50,7 @@ main.get('/download/file', (req, res) => {
   stream.on('info', (info, format) => {
     res.setHeader('Content-Disposition', `attachment; filename="ytomp3-music-name.mp3"`);
     res.setHeader('Content-Type', 'audio/mpeg');
-    console.log(format)
+    console.log(info)
   });
 
   stream.pipe(res);
