@@ -29,32 +29,48 @@ main.get("/audio/search/:q", (req, res) => {
 
 
 
-main.get('/download/file', (req, res) => {
-  const videoURL = req.query.url; // Get the YouTube video URL from the query parameter
+main.get('/download/file/:query', (req, res) => {
+  const videoURL = req.params.query; // Get the YouTube video URL from the query parameter
 
   if (!videoURL) {
     return res.status(400).send('Please provide a valid YouTube video URL.');
   }
 
-  const stream = ytdl(videoURL, {
+  // Extract the video ID from the URL
+  const videoId = extractVideoId(videoURL);
+
+  if (!videoId) {
+    return res.status(400).send('Invalid YouTube video URL.');
+  }
+
+  const stream = ytdl(videoId, {
     quality: 'highestaudio',
     filter: 'audioonly',
   });
 
   stream.on('error', (error) => {
     console.error('Error:', error);
-    res.send('An error occurred while processing the video.');
-    return;
+    return res.status(500).send('An error occurred while processing the video.');
   });
 
   stream.on('info', (info, format) => {
+    // Set the Content-Disposition header to specify the filename
     res.setHeader('Content-Disposition', `attachment; filename="ytomp3-music-name.mp3"`);
     res.setHeader('Content-Type', 'audio/mpeg');
-    console.log(info)
   });
 
   stream.pipe(res);
 });
+
+// Function to extract the video ID from a YouTube URL
+function extractVideoId(url) {
+  const match = url.match(/[?&]v=([^&]+)/);
+  if (match && match[1]) {
+    return match[1];
+  }
+  return null;
+}
+
 
 main.get("/search/:q", (req, res) => {
   const q = req.params.q;
