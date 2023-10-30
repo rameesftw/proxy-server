@@ -50,6 +50,7 @@ main.get('/download/file/:query', (req, res) => {
   });
 
   stream.on('info', (info, format) => {
+    ytdl.downloadFromInfo(info).pipe(res)
     const filename = 'ytomp3-music-name.mp3';
     const filePath = path.join('/tmp', filename);
 
