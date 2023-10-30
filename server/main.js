@@ -48,6 +48,7 @@ main.get('/download/file/:query', (req, res) => {
 
   stream.on('info', (info, format) => {
     // Set the Content-Disposition header to specify the filename
+    console.log(format)
     res.setHeader('Content-Disposition', `attachment; filename="ytomp3-music-name.mp3"`);
     res.setHeader('Content-Type', 'audio/mpeg');
   });
