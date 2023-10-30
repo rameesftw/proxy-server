@@ -1,7 +1,7 @@
 const express = require("express");
 const main = express.Router();
 const axios = require("axios");
-const ytdl = require("ytdl-core");
+const ytdl = require("@distube/ytdl-core");
 const { client, handleDb } = require("./session");
 
 main.get("/audio/search",(req,res)=>{
