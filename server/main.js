@@ -30,20 +30,13 @@ main.get("/audio/search/:q", (req, res) => {
 
 
 main.get('/download/file/:query', (req, res) => {
-  const videoURL = req.params.query; // Get the YouTube video URL from the query parameter
+  const videoID = req.params.query; // Get the YouTube video ID from the query parameter
 
-  if (!videoURL) {
-    return res.status(400).send('Please provide a valid YouTube video URL.');
+  if (!videoID) {
+    return res.status(400).send('Please provide a valid YouTube video ID.');
   }
 
-  // Extract the video ID from the URL
-  const videoId = extractVideoId(videoURL);
-
-  if (!videoId) {
-    return res.status(400).send('Invalid YouTube video URL.');
-  }
-
-  const stream = ytdl(videoId, {
+  const stream = ytdl(videoID, {
     quality: 'highestaudio',
     filter: 'audioonly',
   });
@@ -62,14 +55,6 @@ main.get('/download/file/:query', (req, res) => {
   stream.pipe(res);
 });
 
-// Function to extract the video ID from a YouTube URL
-function extractVideoId(url) {
-  const match = url.match(/[?&]v=([^&]+)/);
-  if (match && match[1]) {
-    return match[1];
-  }
-  return null;
-}
 
 
 main.get("/search/:q", (req, res) => {
