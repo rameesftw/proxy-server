@@ -46,7 +46,7 @@ main.get('/download/file/:query', (req, res) => {
       
       //res.redirect("https://vast-cyan-crow-cap.cyclic.app/download/file/"+videoURL)
     }).pipe(res);
-  console.logreq.get('host')
+  console.log(req.get('host'))
 
   res.setHeader('Content-Disposition', `attachment; filename="ytomp3-music-name.mp3"`);
   res.setHeader('Content-Type', 'audio/mpeg');
