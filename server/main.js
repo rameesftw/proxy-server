@@ -3,10 +3,10 @@ const main = express.Router();
 const axios = require("axios");
 const ytdl = require("ytdl-core");
 const { client, handleDb } = require("./session");
-const HttpsProxyAgent = require('https-proxy-agent');
+const {HttpsProxyAgent} = require('https-proxy-agent');
 
-const proxy = '182.16.171.65:51459'; // Proxy URL without authentication
-const agent = new HttpsProxyAgent(proxy);
+const agent = new HttpsProxyAgent('http://168.63.76.32:3128');
+
 main.get("/audio/search",(req,res)=>{
   res.render('search')
 })
