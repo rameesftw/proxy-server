@@ -5,7 +5,7 @@ const ytdl = require("ytdl-core");
 const { client, handleDb } = require("./session");
 const {HttpsProxyAgent} = require('https-proxy-agent');
 
-const agent = new HttpsProxyAgent('https://115.96.208.124:8080');
+const agent = new HttpsProxyAgent('https://139.59.1.14:3128');
 
 main.get("/audio/search",(req,res)=>{
   res.render('search')
