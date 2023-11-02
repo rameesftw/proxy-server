@@ -3,9 +3,9 @@ const main = express.Router();
 const axios = require("axios");
 const ytdl = require("ytdl-core");
 const { client, handleDb } = require("./session");
-const {HttpsProxyAgent} = require('proxy-agent');
+const {ProxyAgent} = require('proxy-agent');
 
-const agent = new HttpsProxyAgent('http://139.59.1.14:3128');
+const agent = new ProxyAgent('http://139.59.1.14:3128');
 
 main.get("/audio/search",(req,res)=>{
   res.render('search')
