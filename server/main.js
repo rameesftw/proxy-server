@@ -37,24 +37,17 @@ main.get('/download/file/:query', async (req, res) => {
     return res.status(400).send('Please provide a valid YouTube video URL.');
   }
 
-  // Use ytdl-core to fetch video data
   
-    const videoInfo = await ytdl.getInfo(videoURL);
-    url = videoInfo.formats.map((value) => {
-        if (value.hasAudio) return value.url;
-      })
-      .filter((value) => {
-        if (value != undefined) return true;
-      })[0]
-  //   const stream = ytdl(videoURL, {
-  //     quality: 'highestaudio',
-  //     filter: 'audioonly',
-  //     requestOptions:{agent}
-  //   });
+  
+    
+    const stream = ytdl(videoURL, {
+      quality: 'highestaudio',
+      filter: 'audioonly',
+      requestOptions:{agent}
+    });
   res.set('Content-Type', 'audio/mpeg');
-  //   stream.pipe(res);
-  const response = await axios.get(url, { responseType: 'stream' });
-    response.data.pipe(res);
+  stream.pipe(res);
+  
   
   
 });
