@@ -36,39 +36,49 @@ main.get("/audio/search/:q", async (req, res) => {
   res.render("index", render);
 });
 
-
-
 main.get("/stream/:id", async (req, res) => {
   const videoURL = req.params.id;
 
   try {
-   
-
     // Generate a random filename for the temporary file
-    
+    const filename = Math.random().toString(36).substring(7) + ".mp3";
+
+    // Path to the tmp folder (sibling of /server)
+    const tmpFolderPath = path.join(__dirname, '../tmp');
+    const tmpFilePath = path.join(tmpFolderPath, filename);
+
+    // Create the temporary directory if it doesn't exist
+    if (!fs.existsSync(tmpFolderPath)) {
+      fs.mkdirSync(tmpFolderPath, { recursive: true });
+    }
 
     // Download the entire audio file and save it to the temporary folder
-const path = require("../path")
-var filename = Math.random().toString(36).substring(7)+".mp3"
- const writableStream = fs.createWriteStream(path+"/tmp/"+filename);
-  let stream =await ytdl(videoURL, {
-      quality: 'highestaudio',
-      filter: 'audioonly',
-    })
-  stream.on("data",(chunck)=>writableStream.write(chunck))
-  stream.on("finish",()=>{console.log("end");writableStream.end();res.sendFile(path+"/tmp/"+filename)})
-  res.on("finish",()=>{fs.unlinkSync(path+"/tmp/"+filename)})
+    const writableStream = fs.createWriteStream(tmpFilePath);
+    const stream = ytdl(videoURL, { quality: 'highestaudio', filter: 'audioonly' });
 
- 
-    
+    stream.on("data", (chunk) => writableStream.write(chunk));
 
-    
+    stream.on("end", () => {
+      writableStream.end();
+      // Send the file after it has been written
+      res.sendFile(tmpFilePath, (err) => {
+        if (err) {
+          console.error('Error sending file:', err);
+        } else {
+          // Clean up the temporary file after it has been sent
+          fs.unlinkSync(tmpFilePath);
+        }
+      });
+    });
+
   } catch (error) {
     // Handle the error, for example, send a response indicating that the video is not found
     console.error('Error fetching video info:', error);
     res.status(404).send('Video not found or is no longer available');
   }
 });
+
+
 
 main.get("/search/:q", async (req, res) => {
   const q = req.params.q;
