@@ -30,8 +30,6 @@ var handleDb = async (data) => {
         break;
   }
 };
-//await handleDb({method:"insert",collection:"session",body:{sid:tempSid}}).then(res.cookie("sid",tempSid));
-//console.log(await handleDb({method:"insert",collection:"session",body:{sid:tempSid}}).then(res.cookie("sid",tempSid)));
 var session = async (req, res, next) => {
   var tempSid = uuid.v4();
   if (req.cookies == null) {
@@ -61,12 +59,12 @@ var save =async (req) => {
   if (req.session != undefined) {
     req.session.lastModified = new Date();
     if(req.session.isFirst==true){
-      console.log("here");
+      
       handleDb({
         body: req.session,
         method: "insert",
         collection: "session"
-      }).then((err) => console.log(err));
+      }).then((err) => null);
     }
     else if(req.session.isFirst==false){
       
@@ -75,7 +73,7 @@ var save =async (req) => {
       method: "update",
       collection: "session",
       find: { sid: req.session.sid },
-    }).then((err) => console.log(err));
+    }).then((err) => null);
     }
   }
 };

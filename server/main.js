@@ -4,31 +4,29 @@ const axios = require("axios");
 const ytdl = require("ytdl-core");
 const { client, handleDb } = require("./session");
 const {ProxyAgent} = require('proxy-agent');
-
+const ytsr = require("@citoyasha/yt-search")
+const ytsearch = require("yt-search")
 
 const agent = new ProxyAgent('http://139.59.1.14:3128');
 
 main.get("/audio/search",(req,res)=>{
   res.render('search')
 })
-main.get("/audio/search/:q", (req, res) => {
+main.get("/audio/search/:q", async(req, res) => {
   let q = req.params.q;
   q=q.replace("-download-mp3","")
-  console.log(req.headers["x-forwarded-for"] || req.socket.remoteAddress);
-  axios
-    .get(
-      "https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyD-eKz53eTLx3XQdIctqCuGrdbrzF8iD08&type=video&q=" +
-        q
-    )
-    .then((axios) => {
-     const data=axios.data.items[0]
+  
+   var youtubeSearchData = await ytsearch.search({query:q,pages:1}).then(data=>data.all[0])
+   
+    if(!youtubeSearchData){res.status(500).write("server error due to unexpected search");res.end();return;}
+    
       const render = {
-    title: data.snippet.title,
-    description:data.snippet.description,
-    downloadUrl:`download/file/${data.id.videoId}`,
+    title: youtubeSearchData.title,
+    description:youtubeSearchData.description,
+    downloadUrl:`download/file/${youtubeSearchData.videoId}`,
   };
   res.render('index', render);
-}).catch((err)=>{console.log(err);})})
+})
 
 main.get('/download/file/:query', async (req, res) => {
   const videoURL = req.params.query; // Get the video URL from the query parameter
@@ -36,62 +34,73 @@ main.get('/download/file/:query', async (req, res) => {
   if (!videoURL) {
     return res.status(400).send('Please provide a valid YouTube video URL.');
   }
-
-  
-  
-    
-    const stream = ytdl(videoURL, {
+  const stream = ytdl(videoURL, {
       quality: 'highestaudio',
       filter: 'audioonly',
-      requestOptions:{agent}
+      
     });
   res.set('Content-Type', 'audio/mpeg');
-  stream.pipe(res);
+  res.setHeader('Content-disposition', `attachment; filename=ytomp3-${Math.floor(Math.random()*90000) + 10000}.mp3`);
+  var chunks = [];
+
+    stream.on('data', (chunk) => {
+      
+      res.write(chunk)
+    });
+
+    stream.on('end', () => {
+     
+      
+      res.end()
+    });
+    
+    
+   
+ // stream.pipe(res,{ highWaterMark:  5 * 1024 * 1024 });
+  
   
   
   
 });
 
-main.get("/search/:q", (req, res) => {
+main.get("/search/:q", async(req, res) => {
   const q = req.params.q;
-  console.log(req.headers["x-forwarded-for"] || req.socket.remoteAddress);
-  axios
-    .get(
-      "https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyD-eKz53eTLx3XQdIctqCuGrdbrzF8iD08&type=video&q=" +
-        q
-    )
-    .then((axios) => {
-      return axios.data.items.map((value) => {
+  
+  var youtubeSearchData=await ytsr.search(q, 5)
+
+   youtubeSearchData=youtubeSearchData.map((value) => {
         return {
-          videoid: value.id.videoId,
-          title: value.snippet.title,
-          thumbnail: value.snippet.thumbnails.medium,
+          videoId: value.id,
+          title: value.title,
+          thumbnail: value.thumbnail,
         };
       });
+      res.json(youtubeSearchData)
     })
-    .then((data) => {
-      res.json(data);
-    });
-});
+    
+    
+
+
 
 main.get("/getUrl/:id", (req, res) => {
-  ytdl.getInfo(req.params.id).then((resp) => {
+  ytdl.getInfo(req.params.id,{
+    quality: 'highestaudio',
+    filter: 'audioonly'
+  }).then((resp) => {
     res.json(resp.formats);
   });
 });
 main.post("/data/:options", async (req, res) => {
   switch (req.params.options) {
     case "save":
-      console.log(req.body);
+      
       await client
         .db("songData")
         .collection(req.session.username)
         .updateOne(req.body, { $set: req.body }, { upsert: true })
-        .then((data) => console.log(data));
         break;
     case "get":
-      console.log("get:"+req.params);
-      client.db("songData").collection(req.session.username).find({}).toArray().then(data=>{console.log(data);res.json(data)})
+      client.db("songData").collection(req.session.username).find({}).toArray().then(data=>{res.json(data)})
   }
 });
 module.exports = main;

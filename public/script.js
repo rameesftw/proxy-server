@@ -1,63 +1,55 @@
 var audio = document.getElementById("AUDIO");
 var data = { volume: 1 };
 
-document.getElementById("query").onkeydown =(e)=>{
-  if(e.key=="Enter")document.getElementById("send").click()
-}
-var renderSavedSong =async ()=>{
-  const savedSongData = ()=>{
-  return  fetch('/data/get',{method:"POST"}).then(res=>res.json()).then(res=>{return(res)});
-  }
-  const dom =(query)=>{return document.querySelector(query);}
+document.getElementById("query").onkeydown = (e) => {
+  if (e.key == "Enter") document.getElementById("send").click();
+};
+var renderSavedSong = async () => {
+  const savedSongData = () => {
+    return fetch("/data/get", { method: "POST" })
+      .then((res) => res.json())
+      .then((res) => {
+        return res;
+      });
+  };
+  const dom = (query) => {
+    return document.querySelector(query);
+  };
   var songData = await savedSongData();
-  for(var i=0;i<songData.length;i++){
-  //<div class="p_song">
- // <p id="p_title">song title</p>
- // <p id="p_artist">artistname</p>
- // <button onclick="playatlist(0)">
-   // <i class="bx bx-play" id="but0"></i>
-  //</button>
-//</div>
-    const div = document.createElement("div")
-          div.className = "p_song";
-    const title= document.createElement("p")
-    title.id="p_title";title.textContent=songData[i].title;
-    const button = document.createElement("button") 
-          button.setAttribute("onclick",`getUrl4Saved(${i})`)
-    div.append(title,button)
-    dom("#songdiv").append(div)
+  for (var i = 0; i < songData.length; i++) {
+    const div = document.createElement("div");
+    div.className = "p_song";
+    const title = document.createElement("p");
+    title.id = "p_title";
+    title.textContent = songData[i].title;
+    const button = document.createElement("button");
+    button.setAttribute("onclick", `getUrl4Saved(${i})`);
+    div.append(title, button);
+    dom("#songdiv").append(div);
   }
   console.log(songData);
-  
-}
+};
 renderSavedSong();
 var save = (i) => {
-       console.log(searchData.data[i])
-       fetch('/data/save', {
-  method: 'POST', // Specify the POST method
-  headers: {
-    'Content-Type': 'application/json', // Set the content type
-    
-  },
-  body: JSON.stringify(searchData.data[i]), 
-})  
-       
-
+  console.log(searchData.data[i]);
+  fetch("/data/save", {
+    method: "POST", // Specify the POST method
+    headers: {
+      "Content-Type": "application/json", // Set the content type
+    },
+    body: JSON.stringify(searchData.data[i]),
+  });
 };
 document.body.onload = () => {
   const temp = localStorage.getItem("data");
   if (temp != null) {
-  
-    fetch(
-      "https://vast-cyan-crow-cap.cyclic.app/getUrl/" +
-        JSON.parse(temp).id,
-      { headers: { "Content-Type": "application/json" } }
-    )
+    fetch("getUrl/" + JSON.parse(temp).id, {
+      headers: { "Content-Type": "application/json" },
+    })
       .then((res) => res.json())
       .then((res) => {
-        
-    //     document.getElementById("title").innerText = res.title;
-    // document.getElementById("img").src = searchData.data[i].thumbnail.url;
+        //     document.getElementById("title").innerText = res.title;
+        // document.getElementById("img").src = searchData.data[i].thumbnail.url;
         audio.src = res
           .map((value) => {
             if (value.hasAudio) return value.url;
@@ -65,28 +57,32 @@ document.body.onload = () => {
           .filter((value) => {
             if (value != undefined) return true;
           })[0];
-audio.currentTime=JSON.parse(temp).currentTime;
-        audio.play().catch(()=>{console.log("welocome")});
+        audio.currentTime = JSON.parse(temp).currentTime;
+        audio.play().catch(() => {
+          console.log("welocome");
+        });
       });
-      
-      document.getElementById("title").innerText = JSON.parse(temp).title;
+
+    document.getElementById("title").innerText = JSON.parse(temp).title;
     document.getElementById("img").src = JSON.parse(temp).thumbnail;
   }
 };
-var isUnloaded =false;
-window.onbeforeunload = ()=>{
-  if(!isUnloaded){
-  isUnloaded=true;  
-  const temp = JSON.parse(localStorage.getItem("data"));
-  temp.currentTime = audio.currentTime;
-  localStorage.setItem("data", JSON.stringify(temp));}
-}
+var isUnloaded = false;
+window.onbeforeunload = () => {
+  if (!isUnloaded) {
+    isUnloaded = true;
+    const temp = JSON.parse(localStorage.getItem("data"));
+    temp.currentTime = audio.currentTime;
+    localStorage.setItem("data", JSON.stringify(temp));
+  }
+};
 document.body.onbeforeunload = () => {
-  if(!isUnloaded){
-  isUnloaded=true;
-  const temp = JSON.parse(localStorage.getItem("data"));
-  temp.currentTime = audio.currentTime;
-  localStorage.setItem("data", JSON.stringify(temp));}
+  if (!isUnloaded) {
+    isUnloaded = true;
+    const temp = JSON.parse(localStorage.getItem("data"));
+    temp.currentTime = audio.currentTime;
+    localStorage.setItem("data", JSON.stringify(temp));
+  }
 };
 document.getElementById("mute").onclick = () => {
   if (audio.volume == 0) {
@@ -109,20 +105,15 @@ var open_p = () => {
 var v;
 document.getElementById("send").onclick = () => {
   document.getElementById("searchresults").innerHTML = "";
-  fetch(
-    "https://vast-cyan-crow-cap.cyclic.app/search/" +
-      document.getElementById("query").value,
-    {
-      headers: { "Content-Type": "application/json" },
-    }
-  )
+  fetch("search/" + document.getElementById("query").value, {
+    headers: { "Content-Type": "application/json" },
+  })
     .then((res) => res.json())
     .then((res) => {
       document.getElementById("searchresults").innerHTML = "";
       searchData.data = res;
       searchData.buttons = [];
-
-      for (var i = 0; i < res.length; i++) {
+      for (var i = 0; i < 5; i++) {
         var p = document.createElement("p");
         p.innerText = res[i].title;
         var div = document.createElement("div");
@@ -132,7 +123,7 @@ document.getElementById("send").onclick = () => {
 
         button.className = "searchPlay";
         buttonAdd = button.cloneNode(true);
-        button.setAttribute("onclick", `getUrl("${res[i].videoid}",${i})`);
+        button.setAttribute("onclick", `getUrl("${res[i].videoId}",${i})`);
         searchData.buttons.push(button);
 
         buttonAdd.innerHTML = `<i class='bx bx-save'></i>`;
@@ -165,10 +156,13 @@ var getUrl = (videoID, i) => {
     }
   } else {
     temp = JSON.parse(localStorage.getItem("data"));
-   if(temp==null)temp={id:null};
-   temp.id = videoID;
-   temp.title =searchData.data[i].title;
-   temp.thumbnail = searchData.data[i].thumbnail.url; 
+    //if(temp==null)
+    temp = {
+      id: videoID,
+      title: searchData.data[i].title,
+      thumbnail: searchData.data[i].thumbnail,
+    };
+
     localStorage.setItem("data", JSON.stringify(temp));
     audio.pause();
     document.getElementById("slider").value = 0;
@@ -179,9 +173,9 @@ var getUrl = (videoID, i) => {
       searchData.prev.innerHTML = `<i class="bx bx-play" ></i>`;
     }
     document.getElementById("title").innerText = searchData.data[i].title;
-    document.getElementById("img").src = searchData.data[i].thumbnail.url;
-    document.title="TYMP3\t|\t"+searchData.data[i].title
-    fetch("https://vast-cyan-crow-cap.cyclic.app/getUrl/" + videoID, {
+    document.getElementById("img").src = searchData.data[i].thumbnail;
+    document.title = "TYMP3\t|\t" + searchData.data[i].title;
+    fetch("getUrl/" + videoID, {
       headers: { "Content-Type": "application/json" },
     })
       .then((res) => res.json())
@@ -203,14 +197,15 @@ document.getElementById("play_btn").onclick = () => {
   audio.paused ? audio.play() : audio.pause();
 };
 audio.onplay = () => {
-  if(searchData.now){  
-  
-  searchData.now.innerHTML = '<i class="bx bx-pause" ></i>';}
-document.getElementById("playimg").className = "bx bx-pause";};
+  if (searchData.now) {
+    searchData.now.innerHTML = '<i class="bx bx-pause" ></i>';
+  }
+  document.getElementById("playimg").className = "bx bx-pause";
+};
 audio.onpause = () => {
-  if(searchData.now){
-  
-  searchData.now.innerHTML = '<i class="bx bx-play" ></i>';}
+  if (searchData.now) {
+    searchData.now.innerHTML = '<i class="bx bx-play" ></i>';
+  }
   document.getElementById("playimg").className = "bx bx-play";
 };
 var playdur = (current) => {
@@ -244,4 +239,3 @@ audio.ontimeupdate = (e) => {
 document.getElementById("slider").oninput = (e) => {
   audio.currentTime = (e.target.value * audio.duration) / 100;
 };
-

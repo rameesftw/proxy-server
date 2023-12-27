@@ -19,7 +19,6 @@ loginRoute.get("/signup", (req, res) => {
 });
 
 loginRoute.post("/signup", async (req, res) => {
-  console.log(req.body);
   const result = await handleDb({
     find: { username: req.body.username },
     collection: "loginData",
@@ -40,7 +39,7 @@ loginRoute.post("/signup", async (req, res) => {
         isFirst: true,
       };
       await save(req).then(async () => {
-        res.cookie("sid", sid);
+        res.cookie("sid",{ maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
         res.redirect("/");
         await handleDb({
           method: "insert",
@@ -75,7 +74,7 @@ loginRoute.post("/login", async (req, res) => {
           isFirst:true
         };
         save(req).then(()=>{
-          res.cookie("sid",sid);
+          res.cookie("sid",sid, { maxAge: 14*24 * 60 * 60 * 1000, httpOnly: true });
           res.redirect("/");
         })
 

@@ -1,4 +1,5 @@
 const {express,session,client,axios, uuid,app,store, ytdl,cors,cookieParser,save, main, loginRoute} = require("./server/app.js");
+
 app.set('view engine', 'ejs');
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -16,6 +17,7 @@ app.use("/src",(req,res,next)=>{
 next();
 
 })
+app.get("/favicon.ico",(req,res)=>res.sendFile(__dirname+"/public/image.png"))
 app.get("/sitemap.xml",(req,res)=>res.sendFile(__dirname+"/public/sitemap.xml"))
 app.get("/home",(req,res)=>res.render('home'))
 app.use("/src",express.static("public"));
