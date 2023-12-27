@@ -35,17 +35,20 @@ main.get("/audio/search/:q", async (req, res) => {
   };
   res.render("index", render);
 });
-
-main.get("/stream/:id", async (req, res) => {
+var timeouts = []
+main.get("/stream/:id", async (req, res) => {  
   const videoURL = req.params.id;
-
-  try {
-    // Generate a random filename for the temporary file
-    const filename = Math.random().toString(36).substring(7) + ".mp3";
+    const filename =videoURL+".mp3";
 
     // Path to the tmp folder (sibling of /server)
     const tmpFolderPath = path.join(__dirname, '../tmp');
     const tmpFilePath = path.join(tmpFolderPath, filename);
+  
+  fs.access(tmpFilePath, fs.constants.F_OK, (errAccess) => {
+    if (errAccess) {
+       {try {
+    // Generate a random filename for the temporary file
+
 
     // Create the temporary directory if it doesn't exist
     if (!fs.existsSync(tmpFolderPath)) {
@@ -66,7 +69,7 @@ main.get("/stream/:id", async (req, res) => {
           console.error('Error sending file:', err);
         } else {
           // Clean up the temporary file after it has been sent
-          fs.unlinkSync(tmpFilePath);
+         
         }
       });
     });
@@ -75,7 +78,12 @@ main.get("/stream/:id", async (req, res) => {
     // Handle the error, for example, send a response indicating that the video is not found
     console.error('Error fetching video info:', error);
     res.status(404).send('Video not found or is no longer available');
-  }
+  }}
+    } else {
+      res.sendFile(tmpFilePath)
+    }
+  });
+ 
 });
 
 
