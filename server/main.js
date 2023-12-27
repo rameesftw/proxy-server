@@ -59,20 +59,9 @@ main.get("/stream/:id", async (req, res) => {
     const writableStream = fs.createWriteStream(tmpFilePath);
     const stream = ytdl(videoURL, { quality: 'highestaudio', filter: 'audioonly' });
 
-    stream.on("data", (chunk) => writableStream.write(chunk));
-
-    stream.on("end", () => {
-      writableStream.end();
-      // Send the file after it has been written
-      res.sendFile(tmpFilePath, (err) => {
-        if (err) {
-          console.error('Error sending file:', err);
-        } else {
-          // Clean up the temporary file after it has been sent
-         
-        }
-      });
-    });
+    stream.pipe(writableStream)
+    stream.on("finish",()=>{res.sendFile(tmpFilePath)}) 
+    
 
   } catch (error) {
     // Handle the error, for example, send a response indicating that the video is not found
