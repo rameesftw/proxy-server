@@ -37,7 +37,7 @@ main.get('/download/file/:query', async (req, res) => {
   const stream = ytdl(videoURL, {
       quality: 'highestaudio',
       filter: 'audioonly',
-      
+      requestOptions:{agent}
     });
   res.set('Content-Type', 'audio/mpeg');
   res.setHeader('Content-disposition', `attachment; filename=ytomp3-${Math.floor(Math.random()*90000) + 10000}.mp3`);
