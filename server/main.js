@@ -86,7 +86,6 @@ main.get("/getUrl/:id", (req, res) => {
   ytdl.getInfo(req.params.id,{
     quality: 'highestaudio',
     filter: 'audioonly',
-    requestOptions:{agent}
   }).then((resp) => {
     res.json(resp.formats);
   });
