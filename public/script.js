@@ -105,7 +105,7 @@ var open_p = () => {
 var v;
 document.getElementById("send").onclick = () => {
   document.getElementById("searchresults").innerHTML = "";
-  fetch("search/" + document.getElementById("query").value, {
+  fetch("https://ytomp3.onrender.com/search/" + document.getElementById("query").value, {
     headers: { "Content-Type": "application/json" },
   })
     .then((res) => res.json())
@@ -176,6 +176,7 @@ var getUrl = (videoID, i) => {
     document.getElementById("img").src = searchData.data[i].thumbnail;
     document.title = "TYMP3\t|\t" + searchData.data[i].title;
     audio.src = `https://ytomp3.onrender.com/stream/${videoID}`
+    
     audio.play()
     
   }

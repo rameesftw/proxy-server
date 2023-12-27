@@ -54,6 +54,7 @@ main.get("/stream/:id",async (req, res) => {
     {
       quality: 'highestaudio',
       filter: 'audioonly',
+      requestOptions:{agent}
     })
       const fileSize = info.formats[0].contentLength;
       const chunksize = end ? end - start + 1 : fileSize - start;
