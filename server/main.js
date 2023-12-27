@@ -6,6 +6,8 @@ const { client, handleDb } = require("./session");
 const { ProxyAgent } = require("proxy-agent");
 const ytsr = require("@citoyasha/yt-search");
 const ytsearch = require("yt-search");
+const fs = require("fs")
+const path = require("path")
 
 const agent = new ProxyAgent("http://139.59.1.14:3128");
 
@@ -33,82 +35,39 @@ main.get("/audio/search/:q", async (req, res) => {
   };
   res.render("index", render);
 });
-main.get("/stream/:id",async (req, res) => {
+
+
+
+main.get("/stream/:id", async (req, res) => {
   const videoURL = req.params.id;
 
-  // Parse the Range header
-  const rangeHeader = req.headers.range;
-  const matches = rangeHeader && rangeHeader.match(/bytes=(\d+)-(\d*)/);
-  
-  let start = 0;
-  let end ;
+  try {
+   
 
-  if (matches) {
-    start = parseInt(matches[1], 10);
-    end = matches[2] ? parseInt(matches[2], 10) : undefined;
-  }
+    // Generate a random filename for the temporary file
+    
 
-  // Fetch video info to get content length
-  info = await ytdl.getInfo(
-    videoURL,
-    {
+    // Download the entire audio file and save it to the temporary folder
+const path = require("../path")
+var filename = Math.random().toString(36).substring(7)+".mp3"
+ const writableStream = fs.createWriteStream(path+"/tmp/"+filename);
+  let stream =await ytdl(videoURL, {
       quality: 'highestaudio',
       filter: 'audioonly',
-      requestOptions:{agent}
     })
-      const fileSize = info.formats[0].contentLength;
-      const chunksize = end ? end - start + 1 : fileSize - start;
+  stream.on("data",(chunck)=>writableStream.write(chunck))
+  stream.on("finish",()=>{console.log("end");writableStream.end();res.sendFile(path+"/tmp/"+filename)})
+  res.on("finish",()=>{fs.unlinkSync(path+"/tmp/"+filename)})
 
-      // Log values for debugging
-      console.log('start:', start);
-      console.log('end:', end);
-      console.log('fileSize:', fileSize);
-
-      // Set appropriate headers for a partial content response
-      res.writeHead(206, {
-        'Content-Range': `bytes ${start}-${end || fileSize - 1}/${fileSize}`,
-        'Accept-Ranges': 'bytes',
-        'Content-Length': chunksize,
-        'Content-Type': 'audio/mpeg', // Update with the actual content type
-      });
-
-      // Create a readable stream for the specified range using ytdl-core
-      const videoStream = ytdl.downloadFromInfo(info, { range: { start, end },
-        quality: 'highestaudio',
-        filter: 'audioonly',
-       });
-
-      // Pipe the partial content to the response
-      videoStream.pipe(res);
+ 
     
-});
-main.get("/download/file/:query", async (req, res) => {
-  const videoURL = req.params.query; // Get the video URL from the query parameter
 
-  if (!videoURL) {
-    return res.status(400).send("Please provide a valid YouTube video URL.");
+    
+  } catch (error) {
+    // Handle the error, for example, send a response indicating that the video is not found
+    console.error('Error fetching video info:', error);
+    res.status(404).send('Video not found or is no longer available');
   }
-  const stream = ytdl(videoURL, {
-    quality: "highestaudio",
-    filter: "audioonly",
-    requestOptions: { agent },
-    highWaterMark: 1024 * 1024 * 3,
-  });
-  res.set("Content-Type", "audio/mpeg");
-  res.setHeader(
-    "Content-disposition",
-    `attachment; filename=ytomp3-${
-      Math.floor(Math.random() * 90000) + 10000
-    }.mp3`
-  );
-
-  stream.on("data", (chunk) => {
-    res.write(chunk);
-  });
-
-  stream.on("end", () => {
-    res.end();
-  });
 });
 
 main.get("/search/:q", async (req, res) => {
