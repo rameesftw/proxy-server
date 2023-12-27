@@ -83,10 +83,7 @@ main.get("/search/:q", async(req, res) => {
 
 
 main.get("/getUrl/:id", (req, res) => {
-  ytdl.getInfo(req.params.id,{
-    quality: 'highestaudio',
-    filter: 'audioonly',
-  }).then((resp) => {
+  ytdl.getInfo(req.params.id).then((resp) => {
     res.json(resp.formats);
   });
 });
