@@ -175,21 +175,9 @@ var getUrl = (videoID, i) => {
     document.getElementById("title").innerText = searchData.data[i].title;
     document.getElementById("img").src = searchData.data[i].thumbnail;
     document.title = "TYMP3\t|\t" + searchData.data[i].title;
-    fetch("getUrl/" + videoID, {
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        audio.src = res
-          .map((value) => {
-            if (value.hasAudio) return value.url;
-          })
-          .filter((value) => {
-            if (value != undefined) return true;
-          })[0];
-
-        audio.play();
-      });
+    audio.src = `https://ytomp3.onrender.com/stream/${videoID}`
+    audio.play()
+    
   }
 };
 
