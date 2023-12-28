@@ -38,24 +38,59 @@ main.get("/audio/search/:q", async (req, res) => {
 var timeouts = []
 main.get("/stream/:id", async (req, res) => {  
   const videoURL = req.params.id;
-    const filename =videoURL+".mp3";
+  try {
+    if (!videoURL) {
+      return res.status(400).send('Please provide a valid YouTube video URL.');
+    }
+      const videoInfo = await ytdl.getInfo(videoURL,{quality: 'highestaudio',
+         filter: 'audioonly',
+        requestOptions:{agent}})
+      url = videoInfo.formats.map((value) => {
+          if (value.hasAudio) return value.url;
+        })
+        .filter((value) => {
+          if (value != undefined) return true;
+        })[0]
+    const clientHeaders = req.headers;
+  ; 
+  const partialContentHeaders = {
+    'Range': clientHeaders['range'],
+    'If-Range': clientHeaders['if-range'],
+  };
+  
+  const response = await axios({
+    method: "get",
+    url,responseType: 'stream',
+    headers: {
+      ...partialContentHeaders
+    },
+    
+  });
+  const head =response.headers
+   res.set('Content-Type', 'audio/mpeg');
+  res.set('Content-Range',head['content-range'])
+   res.set('Accept-Ranges',head['accept-ranges'])
+   res.set('Content-Length',head['content-length'])
+    
+    res.status(response.status)
+    response.data.pipe(res)
+    
+  } catch (error) {
+    
+  const filename =videoURL+".mp3";
 
-    // Path to the tmp folder (sibling of /server)
     const tmpFolderPath = path.join(__dirname, '../tmp');
     const tmpFilePath = path.join(tmpFolderPath, filename);
   
   fs.access(tmpFilePath, fs.constants.F_OK, (errAccess) => {
     if (errAccess) {
        {try {
-    // Generate a random filename for the temporary file
-
-
-    // Create the temporary directory if it doesn't exist
+    
     if (!fs.existsSync(tmpFolderPath)) {
       fs.mkdirSync(tmpFolderPath, { recursive: true });
     }
 
-    // Download the entire audio file and save it to the temporary folder
+   
     const writableStream = fs.createWriteStream(tmpFilePath);
     const stream = ytdl(videoURL, { quality: 'highestaudio', filter: 'audioonly' });
 
@@ -71,7 +106,7 @@ main.get("/stream/:id", async (req, res) => {
     } else {
       res.sendFile(tmpFilePath)
     }
-  });
+  });}
  
 });
 
