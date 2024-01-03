@@ -18,7 +18,7 @@ main.get("/audio/search/:q", async (req, res) => {
   let q = req.params.q;
   q = q.replace("-download-mp3", "");
   let Cache =await client.db("ytomp3").collection("searchCache").find({q}).toArray()
-  console.log(Cache)
+  console.log(Cache.length)
   if(Cache.length!=0){
     res.render("index",Cache[0]);
 
