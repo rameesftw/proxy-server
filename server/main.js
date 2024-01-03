@@ -53,7 +53,7 @@ main.get("/audio/search/:q", async (req, res) => {
     downloadUrl: `download/file/${youtubeSearchData.videoId}`,
   };
   res.render("index", render);
-  await client.db("ytomp3").collection("searchCache").updateOne({q},render,{upsert:true})
+  await client.db("ytomp3").collection("searchCache").updateOne({q},{$set:render},{upsert:true})
 }
 });
 
