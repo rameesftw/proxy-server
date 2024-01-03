@@ -33,7 +33,7 @@ main.get("/audio/search/:q", async (req, res) => {
     downloadUrl: `download/file/${youtubeSearchData.videoId}`,
     }
     
-    await client.db("ytomp3").collection("searchCache").updateOne({q},{$set:youtubeSearchData})
+    await client.db("ytomp3").collection("searchCache").updateOne({q},{$set:youtubeSearchData},{upsert:true})
   }else{
   
   var youtubeSearchData = await ytsearch
