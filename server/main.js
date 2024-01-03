@@ -11,43 +11,30 @@ const path = require("path")
 
 const agent = new ProxyAgent("http://139.59.1.14:3128");
 
-main.get("/download/file/:query", async (req, res) => {
-  const videoURL = req.params.query; // Get the video URL from the query parameter
-
-  if (!videoURL) {
-    return res.status(400).send("Please provide a valid YouTube video URL.");
-
-  }
-  const stream = ytdl(videoURL, {
-    quality: "highestaudio",
-    filter: "audioonly",
-    requestOptions: { agent },
-    highWaterMark: 1024 * 1024 * 3,
-  });
-  res.set("Content-Type", "audio/mpeg");
-  res.setHeader(
-    "Content-disposition",
-    `attachment; filename=ytomp3-${
-      Math.floor(Math.random() * 90000) + 10000
-    }.mp3`
-  );
-
-  stream.on("data", (chunk) => {
-    res.write(chunk);
-  });
-
-  stream.on("end", () => {
-    res.end();
-  });
-});
-
 main.get("/audio/search", (req, res) => {
   res.render("search");
 });
 main.get("/audio/search/:q", async (req, res) => {
   let q = req.params.q;
   q = q.replace("-download-mp3", "");
+  let Cache =await client.db("ytomp3").collection("searchCache").find({q}).toArray()
+  if(Cache.length!=0){
+    res.render("index",Cache[0]);
 
+
+    var youtubeSearchData = await ytsearch
+    .search({ query: q, pages: 1 })
+    .then((data) => data.all[0]);
+    youtubeSearchData = {
+      q,
+      title: youtubeSearchData.title,
+    description: youtubeSearchData.description,
+    downloadUrl: `download/file/${youtubeSearchData.videoId}`,
+    }
+    
+    await client.db("ytomp3").collection("searchCache").updateOne({q},{$set:youtubeSearchData})
+  }else{
+  
   var youtubeSearchData = await ytsearch
     .search({ query: q, pages: 1 })
     .then((data) => data.all[0]);
@@ -57,13 +44,16 @@ main.get("/audio/search/:q", async (req, res) => {
     res.end();
     return;
   }
-
+  
   const render = {
+    q,
     title: youtubeSearchData.title,
     description: youtubeSearchData.description,
     downloadUrl: `download/file/${youtubeSearchData.videoId}`,
   };
   res.render("index", render);
+  await client.db("ytomp3").collection("searchCache").insertOne(render)
+}
 });
 
 main.get("/stream/:id", async (req, res) => {  
@@ -180,5 +170,34 @@ main.post("/data/:options", async (req, res) => {
           res.json(data);
         });
   }
+});
+main.get("/download/file/:query", async (req, res) => {
+  const videoURL = req.params.query; // Get the video URL from the query parameter
+
+  if (!videoURL) {
+    return res.status(400).send("Please provide a valid YouTube video URL.");
+
+  }
+  const stream = ytdl(videoURL, {
+    quality: "highestaudio",
+    filter: "audioonly",
+    requestOptions: { agent },
+    highWaterMark: 1024 * 1024 * 3,
+  });
+  res.set("Content-Type", "audio/mpeg");
+  res.setHeader(
+    "Content-disposition",
+    `attachment; filename=ytomp3-${
+      Math.floor(Math.random() * 90000) + 10000
+    }.mp3`
+  );
+
+  stream.on("data", (chunk) => {
+    res.write(chunk);
+  });
+
+  stream.on("end", () => {
+    res.end();
+  });
 });
 module.exports = main;
