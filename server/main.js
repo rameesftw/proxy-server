@@ -18,6 +18,7 @@ main.get("/audio/search/:q", async (req, res) => {
   let q = req.params.q;
   q = q.replace("-download-mp3", "");
   let Cache =await client.db("ytomp3").collection("searchCache").find({q}).toArray()
+  console.log(Cache)
   if(Cache.length!=0){
     res.render("index",Cache[0]);
 
@@ -52,7 +53,7 @@ main.get("/audio/search/:q", async (req, res) => {
     downloadUrl: `download/file/${youtubeSearchData.videoId}`,
   };
   res.render("index", render);
-  await client.db("ytomp3").collection("searchCache").insertOne(render)
+  await client.db("ytomp3").collection("searchCache").updateOne({q},render,{upsert:true})
 }
 });
 
