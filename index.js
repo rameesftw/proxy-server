@@ -17,7 +17,7 @@ app.use("/src",(req,res,next)=>{
 next();
 
 })
-app.use("/",express.static("data"))
+app.use("/",express.static(""))
 app.get("/favicon.ico",(req,res)=>res.sendFile(__dirname+"/public/image.png"))
 app.get("/sitemap.xml",(req,res)=>res.sendFile(__dirname+"/public/sitemap.xml"))
 app.get("/home",(req,res)=>res.render('home'))
