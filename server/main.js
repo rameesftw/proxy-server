@@ -21,7 +21,7 @@ main.get("/audio/search/:q", async (req, res) => {
   console.log(Cache.length)
   if(Cache.length!=0){
     res.render("index",Cache[0]);
-updateCache(q);
+
 
   }else{
   
@@ -190,18 +190,4 @@ main.get("/download/file/:query", async (req, res) => {
     res.end();
   });
 });
-var updateCache = async(q)=>{
-  
-  var youtubeSearchData = await ytsearch
-  .search({ query: q, pages: 1 })
-  .then((data) => data.all[0]);
-  youtubeSearchData = {
-    q,
-    title: youtubeSearchData.title,
-  description: youtubeSearchData.description,
-  downloadUrl: `download/file/${youtubeSearchData.videoId}`,
-  }
-  
-  await client.db("ytomp3").collection("searchCache").updateOne({q},{$set:youtubeSearchData},{upsert:true})
-}
 module.exports = main;
