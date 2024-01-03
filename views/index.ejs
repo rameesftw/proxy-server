@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <meta name="description" content="Explore and download the <%= title %> MP3 song by  our music platform. Enjoy the audio and discover more about the artist and song details.">
+    <meta name="keywords" content="<%= title %> MP3 download,  artist  song, music, audio, genre, download">
+    <meta name="author" content="YTOMP3">
+    <title><%= title %> </title>
+
     <style>
         .song-container {
             background-color: #fff; /* White background */
@@ -87,14 +91,13 @@
 <body>
     <div class="song-container">
         <div class="song-title"><%= title %></div>
-        <div class="artist-name">artist </div>
         <div class="song-description">
             <%= description %>
         </div>
         <div class="custom-audio-player">
             <audio id="custom-audio" preload="none">
                 <source src="/<%= downloadUrl %>" type="audio/mpeg">
-                Keywords: <%= title %> mp3 download,  song,  artist, music, genre  
+                Keywords: <%= title %> mp3 download,song, artist, music, genre  
             </audio>
             <div class="audio-controls">
                 <button id="play-pause-button" class="play">Play</button>
@@ -103,7 +106,7 @@
         </div>
         <a class="download-link" href="/<%= downloadUrl %>">Download mp3</a>
         <div class="keywords">
-            Keywords: <%= title %> mp3 download,  song,  artist, music, genre
+            Keywords: <%= title %> mp3 download, song, artist, music, genre
         </div>
     </div>
 
