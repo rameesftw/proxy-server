@@ -125,7 +125,7 @@ main.get("/stream/:id", async (req, res) => {
 main.get("/search/:q", async (req, res) => {
   const q = req.params.q;
 
-  var youtubeSearchData = await ytsr.search(q, 5);
+  try{var youtubeSearchData = await ytsr.search(q, 5);
 
   youtubeSearchData = youtubeSearchData.map((value) => {
     return {
@@ -134,7 +134,9 @@ main.get("/search/:q", async (req, res) => {
       thumbnail: value.thumbnail,
     };
   });
-  res.json(youtubeSearchData);
+  res.json(youtubeSearchData);}catch{
+    res.sendStatus(500);
+  }
 });
 
 main.get("/getUrl/:id", (req, res) => {
@@ -163,8 +165,8 @@ main.post("/data/:options", async (req, res) => {
 });
 main.get("/download/file/:query", async (req, res) => {
   const videoURL = req.params.query; // Get the video URL from the query parameter
-
-  if (!videoURL) {
+console.log(videoURL)
+  if (!videoURL ||videoURL=="undefined") {
     return res.status(400).send("Please provide a valid YouTube video URL.");
 
   }
