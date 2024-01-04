@@ -2,7 +2,7 @@ const { MongoClient } = require("mongodb");
 const uuid = require("uuid");
 require("dotenv").config()
 const uri =process.env.URI; // Change to your MongoDB URI
-
+console.log(uri)
 const client = new MongoClient(uri, {});
 
 // Connect to the database
