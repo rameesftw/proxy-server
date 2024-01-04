@@ -5,3 +5,4 @@ https
 tmp
 push.bat
 server.js
+.env
