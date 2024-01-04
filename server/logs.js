@@ -4,7 +4,7 @@ const { client } = require("./session");
 
 const log = require("express").Router()
 log.use((req,res,next)=>{
-    const logObj = {
+    if(req.path!="/status"){const logObj = {
         username:req.session?req.session.username:"NA",
         ipaddress:(req.ip=='::1')?(req.headers["x-forwarded-for"] || '').split(',')[0].trim():req.ip||req.connection.remoteAddress,
         path:decodeURIComponent(req.path),
@@ -12,7 +12,11 @@ log.use((req,res,next)=>{
         referer:req.get("referer")?req.get("referer"):"/"
     }
     client.db("ytomp3").collection("logs").insertOne(logObj)
+    }
     next();
+})
+log.get("/status",(req,res)=>{
+    res.sendStatus(200)
 })
 log.get("/admin",async(req,res)=>{
       if(req.query.pass=="rameesftwisback")
