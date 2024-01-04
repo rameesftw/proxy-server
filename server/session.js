@@ -1,8 +1,7 @@
 const { MongoClient } = require("mongodb");
 const uuid = require("uuid");
-
-const uri =
-  "mongodb+srv://muhammadramees697:sG7mbn2KdQ14Teu1@ytomp3.x4ovdmm.mongodb.net/?retryWrites=true&w=majority"; // Change to your MongoDB URI
+require("dotenv").config()
+const uri =process.env.URI; // Change to your MongoDB URI
 
 const client = new MongoClient(uri, {});
 
