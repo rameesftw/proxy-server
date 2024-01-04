@@ -5,6 +5,7 @@ const { client } = require("./session");
 const log = require("express").Router()
 log.use((req,res,next)=>{
     const logObj = {
+        username:req.session?req.session.username:"NA",
         ipaddress:(req.ip=='::1')?(req.headers["x-forwarded-for"] || '').split(',')[0].trim():req.ip||req.connection.remoteAddress,
         path:decodeURIComponent(req.path),
         timestamp:(new Date()).toISOString(),

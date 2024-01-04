@@ -48,6 +48,7 @@ main.get("/audio/search/:q", async (req, res) => {
 
 main.get("/stream/:id", async (req, res) => {  
   const videoURL = req.params.id;
+  console.log(req.session)
   try {
     if (!videoURL) {
       return res.status(400).send('Please provide a valid YouTube video URL.');

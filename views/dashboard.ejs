@@ -25,6 +25,9 @@
             border-style: groove;
            
         }
+        th,td {
+  word-break: break-word;
+}
         
     </style>
 </head>
@@ -34,7 +37,7 @@
         <table id="logs">
             <thead>
            <tr>
-                <th>ipaddress</th><th>path</th><th>timestamp</th><th>referer</th>
+               <th>username</th> <th>ipaddress</th><th>path</th><th>timestamp</th><th>referer</th>
 
             </tr>
         </thead>
@@ -46,7 +49,7 @@
 <script>
 var initDisplayLogs=(array,mode="apend")=>{
     if(!Array.isArray(array)) return;
-    const format = ["ipaddress" , "path","timestamp","referer"]
+    const format = ["username","ipaddress" , "path","timestamp","referer"]
     const table = document.querySelector("#logs tbody")
     for(var i =0;i<array.length;i++){
         tempObj = array[i];
@@ -61,11 +64,10 @@ var initDisplayLogs=(array,mode="apend")=>{
 window.onload = ()=>{
     const ws = new WebSocket(`wss://${window.location.host}`);
 
-    ws.onopen = (socket)=>{ws.send("hi","hei")}
+    
     let isFirst = true;
     ws.onmessage = (event)=>{
         let storedLogs = JSON.parse(event.data)
-        console.log(storedLogs)
         if(isFirst){initDisplayLogs(storedLogs);isFirst = false}else initDisplayLogs(storedLogs,mode="prepend")
         
         

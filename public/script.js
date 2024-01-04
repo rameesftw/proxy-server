@@ -50,13 +50,7 @@ document.body.onload = () => {
       .then((res) => {
         //     document.getElementById("title").innerText = res.title;
         // document.getElementById("img").src = searchData.data[i].thumbnail.url;
-        audio.src = res
-          .map((value) => {
-            if (value.hasAudio) return value.url;
-          })
-          .filter((value) => {
-            if (value != undefined) return true;
-          })[0];
+        audio.src =`https://ytomp3.onrender.com/stream/${JSON.parse(temp).id}`
         audio.currentTime = JSON.parse(temp).currentTime;
         audio.play().catch(() => {
           console.log("welocome");
