@@ -1,48 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Video Player</title>
+    <title>YTOMP3 - Convert YouTube Videos to MP3 | Ultimate Music Experience</title>
+    <meta name="description" content="Discover the ultimate music experience with YTOMP3. Convert YouTube videos to MP3, create personalized playlists, and explore a vast collection of songs. Join the YTOMP3 community for an unparalleled music experience.">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/path/to/favicon.ico" type="image/x-icon">
+
+    <!-- SEO Meta Tags -->
+    <meta name="keywords" content="YTOMP3, music player, YT to MP3 converter, YouTube to audio converter, convert YouTube to MP3, high-quality audio, personalized playlists, music experience, audio converter">
+
     <style>
         body {
-            background-color: #1C2833;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
+            justify-content: space-between;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #3498db;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        header h1 {
+            color: #ecf0f1;
             margin: 0;
+            font-size: 2em;
+        }
+
+        header h2 {
+            color: #ecf0f1;
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .convert-button {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px; /* Adjusted margin here */
+            font-size: 16px;
+        }
+
+        .convert-button:hover {
+            background-color: #2980b9;
         }
 
         .description-container {
-            background-color: #5665734a;
+            margin: 20px;
+            background-color: #ecf0f1;
             border-radius: 10px;
-            box-shadow: 0.1px 8px 8px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
             text-align: center;
+            color: #2c3e50;
+            position: relative; /* Added position: relative */
         }
 
         .nav-link {
             text-decoration: none;
             color: #3498db;
             margin-top: 20px;
+            display: inline-block;
         }
 
         .error-message {
             color: red;
             margin-top: 10px;
         }
+
+        footer {
+            background-color: #3498db;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+            color: #ecf0f1;
+        }
     </style>
 </head>
+
 <body>
+    <header>
+        <h1>YTOMP3 - Your Ultimate Music Experience</h1>
+        <h2>Convert YouTube Videos to MP3</h2>
+    </header>
     <div class="description-container">
-        <h2>Welcome to YouTube Video Player</h2>
-        <p>Experience the world of YouTube videos like never before. Our YouTube Video Player allows you to enjoy your favorite videos directly on our platform. No need to download or install anything.</p>
-        <p>Simply enter the YouTube video URL, and watch it with ease. Whether it's music, tutorials, vlogs, or entertainment, our player has you covered. It's fast, convenient, and free to use.</p>
-        <p>Discover, watch, and enjoy YouTube content hassle-free. Start exploring now!</p>
+        <p>Embark on a transformative musical journey with YTOMP3, a groundbreaking platform designed to revolutionize the way you experience and savor music. Discover a vast collection of songs, convert YouTube videos to MP3, and enjoy high-quality audio with YTOMP3. Join the YTOMP3 community for an unparalleled music experience.</p>
+        <p>One of our standout features is the lightning-fast downloading capability that puts your favorite tunes at your fingertips within seconds. Our advanced search database is a powerhouse, offering an exhaustive collection that facilitates seamless exploration and discovery. Whether you're into chart-toppers, indie gems, or classic melodies, YTOMP3 has it all.</p>
+        <p>Creating personalized playlists becomes an art form with YTOMP3, allowing you to curate your unique sonic journey effortlessly. Immerse yourself in uninterrupted playback, with high-fidelity audio that elevates your auditory experience to new heights. Our platform caters to both casual listeners and devoted music enthusiasts, ensuring an unmatched level of customization to meet your diverse preferences.</p>
+        <p>YTOMP3 isn't just a music player; it's a community. Join like-minded individuals who share your passion for music and redefine how you interact with your favorite tunes online. Our user-friendly interface, coupled with advanced functionalities, positions YTOMP3 as the ultimate music companion.</p>
+        <p>Experience the future of music with YTOMP3. Sign up today, and let the melodies unfold in ways you've never imagined. YTOMP3 is not just a converter; it's your gateway to a vast world of musical exploration.</p>
+        <button class="convert-button" onclick="window.location.href='/audio/search'">Convert or Search Songs</button>
+        <a class="nav-link" href="/signup">Sign up for an account | </a>
+        <a class="nav-link" href="/login">Login</a>
         <p id="error-message" class="error-message"></p>
-        <a class="nav-link" href="/signup">Sign up for an account</a>
     </div>
+    <footer>
+        &copy; 2024 YTOMP3. All rights reserved.
+    </footer>
 </body>
+
 </html>

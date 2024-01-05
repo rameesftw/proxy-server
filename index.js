@@ -31,7 +31,7 @@ app.use("/src",express.static("public"));
 //AIzaSyCdMdqblqRy4ObnC7IFI-xTz5rjO9qS0zc
 app.get("/", (req, res) => {
   
-  if(req.session==undefined)res.sendFile(__dirname+"/public/login.html");
+  if(req.session==undefined)res.render("home");
   else{res.sendFile(__dirname + "/public/index.html");req.session.isFirst=false}   
 save(req);
 });
