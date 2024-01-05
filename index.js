@@ -28,6 +28,7 @@ app.get("/favicon.ico",(req,res)=>res.sendFile(__dirname+"/public/image.png"))
 app.get("/sitemap.xml",(req,res)=>res.sendFile(__dirname+"/public/sitemap.xml"))
 app.get("/home",(req,res)=>res.render('home'))
 app.use("/src",express.static("public"));
+app.get("/robots.txt",(req,req)=>res.sendFile(__dirname+"/public/robot.txt"))
 //AIzaSyCdMdqblqRy4ObnC7IFI-xTz5rjO9qS0zc
 app.get("/", (req, res) => {
   
