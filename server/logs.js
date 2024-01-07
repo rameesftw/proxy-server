@@ -29,7 +29,7 @@ var watchDb = (wss) =>{
         console.log("connected")
         socket.on("message",(data)=>{console.log(data.toString())})
         
-        const storedLogs =await client.db("ytomp3").collection("logs").find().sort({timestamp:-1}).limit(20).toArray()
+        const storedLogs =await client.db("ytomp3").collection("logs").find().sort({timestamp:-1}).toArray()
         socket.send(JSON.stringify(storedLogs))
         let logListner = client.db("ytomp3").collection("logs").watch();
 logListner.on("change",(change)=>{
