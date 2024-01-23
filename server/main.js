@@ -31,6 +31,7 @@ main.get("/audio/search/:q", async (req, res) => {
   } catch (error) {
     res.status(500).write("server error due to unexpected search");
     res.end();
+    return;
   }
   ytsearch
     .search({ query: q, pages: 1 })
