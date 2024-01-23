@@ -39,7 +39,7 @@ main.get("/audio/search/:q", async (req, res) => {
       const render = {
         q,
         title: data.all[0].title,
-        description: (data.all[0].description)?data.all[0].description:null;,
+        description: (data.all[0].description)?data.all[0].description:null,
         downloadUrl: `download/file/${data.all[0].videoId}`,
       };
       client.db("ytomp3").collection("searchCache").updateOne({q},{$set:render},{upsert:true}) });
