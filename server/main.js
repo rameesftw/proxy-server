@@ -25,9 +25,18 @@ main.get("/audio/search/:q", async (req, res) => {
 
   }else{
   
-  var youtubeSearchData = await ytsearch
+  var youtubeSearchData = await ytsr.search(q, 5).then(data=>data[0]);
+  console.log(youtubeSearchData)
+  ytsearch
     .search({ query: q, pages: 1 })
-    .then((data) => data.all[0]);
+    .then((data) => {
+      const render = {
+        q,
+        title: data.all[0].title,
+        description: data.all[0].description,
+        downloadUrl: `download/file/${data.all[0].videoId}`,
+      };
+      client.db("ytomp3").collection("searchCache").updateOne({q},{$set:render},{upsert:true}) });
 
   if (!youtubeSearchData) {
     res.status(500).write("server error due to unexpected search");
@@ -39,10 +48,10 @@ main.get("/audio/search/:q", async (req, res) => {
     q,
     title: youtubeSearchData.title,
     description: youtubeSearchData.description,
-    downloadUrl: `download/file/${youtubeSearchData.videoId}`,
+    downloadUrl: `download/file/${youtubeSearchData.id}`,
   };
   res.render("index", render);
-  await client.db("ytomp3").collection("searchCache").updateOne({q},{$set:render},{upsert:true})
+  
 }
 });
 
