@@ -25,8 +25,13 @@ main.get("/audio/search/:q", async (req, res) => {
 
   }else{
   
-  var youtubeSearchData = await ytsr.search(q, 5).then(data=>data[0]);
+  try {
+    var youtubeSearchData = await ytsr.search(q, 5).then(data=>data[0]);
   console.log(youtubeSearchData)
+  } catch (error) {
+    res.status(500).write("server error due to unexpected search");
+    res.end();
+  }
   ytsearch
     .search({ query: q, pages: 1 })
     .then((data) => {
