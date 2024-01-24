@@ -106,6 +106,7 @@
         </p>
     </div>
     <script>
+        document.querySelector("#searchInput").onkeypress=(e)=>{if(e.key=="Enter"){redirectToSearch()}}
         function redirectToSearch() {
             const searchInput = document.getElementById('searchInput').value;
             window.location.href = `/audio/search/${encodeURIComponent(searchInput)}`;

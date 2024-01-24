@@ -3,19 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore and download the <%= title %> MP3 song by  our music platform. Enjoy the audio and discover more about the artist and song details.">
-    <meta name="keywords" content="<%= title %> MP3 download,  artist  song, music, audio, genre, download">
+    <meta name="description" content="Explore and download the <%= title %> MP3 song by our music platform. Enjoy the audio and discover more about the artist and song details.">
+    <meta name="keywords" content="<%= title %> MP3 download, artist song, music, audio, genre, download">
     <meta name="author" content="YTOMP3">
-    <title><%= title %> </title>
+    <title><%= title %></title>
 
     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
         .song-container {
-            background-color: #fff; /* White background */
+            background-color: #fff;
             border-radius: 10px;
-            box-shadow: 0.1px 8px 8px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
             text-align: center;
-            color: #1C2833; /* Dark text color */
+            color: #333;
+            max-width: 600px;
+            width: 100%;
         }
 
         .song-title {
@@ -24,33 +37,9 @@
             margin-bottom: 10px;
         }
 
-        .artist-name {
-            font-size: 18px;
-            color: #3498db; /* Blue artist name color */
-        }
-
         .song-description {
             font-size: 16px;
             margin-top: 20px;
-        }
-
-        .download-link {
-            display: inline-block;
-            background-color: #3498db; /* Blue download button background color */
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            padding: 10px 20px;
-            font-size: 18px;
-            margin-top: 20px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .download-link:hover {
-            background-color: #1C2833; /* Dark button background color on hover */
-            color: #fff; /* White text color on hover */
         }
 
         .custom-audio-player {
@@ -60,6 +49,7 @@
 
         audio {
             width: 100%;
+            margin-top: 10px;
         }
 
         .audio-controls {
@@ -77,6 +67,7 @@
             margin: 0 10px;
             cursor: pointer;
             transition: background-color 0.3s;
+            border-radius: 5px;
         }
 
         button:hover {
@@ -86,18 +77,48 @@
         input[type="range"] {
             width: 100px;
         }
+
+        .download-link,
+        .search-again-link {
+            display: inline-block;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 18px;
+            margin-top: 20px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .download-link:hover,
+        .search-again-link:hover {
+            background-color: #1C2833;
+        }
+
+        #download-status {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .keywords {
+            margin-top: 20px;
+            font-style: italic;
+            color: #555;
+        }
     </style>
 </head>
 <body>
     <div class="song-container">
         <div class="song-title"><%= title %></div>
-        <div class="song-description">
-            <%= description %>
-        </div>
+        <div class="song-description"><%= description %></div>
         <div class="custom-audio-player">
             <audio id="custom-audio" preload="none">
                 <source src="/<%= downloadUrl %>" type="audio/mpeg">
-                Keywords: <%= title %> mp3 download,song, artist, music, genre  
+                Keywords: <%= title %> mp3 download, song, artist, music, genre  
             </audio>
             <div class="audio-controls">
                 <button id="play-pause-button" class="play">Play</button>
@@ -105,13 +126,14 @@
             </div>
         </div>
         <a class="download-link" href="/<%= downloadUrl %>">Download mp3</a>
-        <div class="keywords">
-            Keywords: <%= title %> mp3 download, song, artist, music, genre
-        </div>
+        <a class="search-again-link" href="/audio/search">Search Again</a>
+        <h4 id="download-status"></h4>
+        <div class="keywords">Keywords: <%= title %> mp3 download, song, artist, music, genre</div>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector(".download-link").onclick = () => { document.querySelector("#download-status").textContent = "Downloading started" }
             const audio = document.getElementById("custom-audio");
             const playPauseButton = document.getElementById("play-pause-button");
             const volumeSlider = document.getElementById("volume-slider");
@@ -128,6 +150,12 @@
 
             volumeSlider.addEventListener("input", function () {
                 audio.volume = volumeSlider.value;
+            });
+
+            const searchAgainLink = document.querySelector(".search-again-link");
+            searchAgainLink.addEventListener("click", function (event) {
+                event.preventDefault();
+                window.location.href = searchAgainLink.getAttribute("href");
             });
         });
     </script>

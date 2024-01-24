@@ -1,4 +1,4 @@
 git add .
 git commit -m "devlopment"
 git push origin glitch
-curl https://api.render.com/deploy/srv-cmno32md3nmc739f5i0g?key=N4FfrlrW8fM
+curl https://api.render.com/deploy/srv-cmnufoen7f5s73d17rq0?key=rxXRkGKJvqs
