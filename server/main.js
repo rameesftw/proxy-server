@@ -46,7 +46,7 @@ main.get("/audio/search/:q", async (req, res) => {
     title: youtubeSearchData.title,
     description: youtubeSearchData.description,
     downloadUrl: `download/file/${youtubeSearchData.id}`,
-    thumbnail:youtubeSearchData.thumbnail
+    
   };
   res.render("index", render);
   
