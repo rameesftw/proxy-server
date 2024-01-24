@@ -33,16 +33,7 @@ main.get("/audio/search/:q", async (req, res) => {
     res.end();
     return;
   }
-  ytsearch
-    .search({ query: q, pages: 1 })
-    .then((data) => {
-      const render = {
-        q,
-        title: data.all[0].title,
-        description: (data.all[0].description)?data.all[0].description:null,
-        downloadUrl: `download/file/${data.all[0].videoId}`,
-      };
-      client.db("ytomp3").collection("searchCache").updateOne({q},{$set:render},{upsert:true}) });
+ axios.get("https://ytomp3updaterapi.cyclic.app/api/update/"+q)
 
   if (!youtubeSearchData) {
     res.status(500).write("server error due to unexpected search");
