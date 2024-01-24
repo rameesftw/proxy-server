@@ -31,6 +31,7 @@ main.get("/audio/search/:q", async (req, res) => {
   } catch (error) {
     res.status(500).write("server error due to unexpected search");
     res.end();
+    axios.get("https://ytomp3updaterapi.cyclic.app/api/update/"+q)
     return;
   }
  axios.get("https://ytomp3updaterapi.cyclic.app/api/update/"+q)
