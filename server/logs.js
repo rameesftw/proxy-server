@@ -11,6 +11,11 @@ log.use((req,res,next)=>{
         timestamp:(new Date()).toISOString(),
         referer:req.get("referer")?req.get("referer"):"/"
     }
+    filter = ["3.134.238.10","3.129.111.220","52.15.118.168"]
+    if(filter.includes(logObj.ipaddress)){
+        next();
+        return;
+    }
     client.db("ytomp3").collection("logs").insertOne(logObj)
     }
     next();
