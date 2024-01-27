@@ -1,15 +1,17 @@
 const http = require('http');
 const httpProxy = require('http-proxy');
 
-// Create a proxy server
 const proxy = httpProxy.createProxyServer({});
 
-// Create an HTTP server
 const server = http.createServer((req, res) => {
-  console.log('Request received:', req.url);
+  // Log the incoming request
+  console.log('Request received:', req.method, req.url);
+
+  // Extract the last part of the path from the request URL
+  const targetServer = req.url.split('/').pop();
 
   // Proxy the request to the target server
-  proxy.web(req, res, { target: 'http://example.com' });
+  proxy.web(req, res, { target: targetServer });
 });
 
 // Handle errors in the proxy
@@ -19,7 +21,6 @@ proxy.on('error', (err, req, res) => {
   res.end('Something went wrong. Please try again.');
 });
 
-// Listen on port 3000
 const PORT = 3000;
 server.listen(PORT, () => {
   console.log(`Proxy server is listening on port ${PORT}`);
