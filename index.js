@@ -1,41 +1,26 @@
-const {express,session,client,axios, uuid,app,store, ytdl,cors,cookieParser,save, main, loginRoute} = require("./server/app.js");
+const http = require('http');
+const httpProxy = require('http-proxy');
 
-app.set('view engine', 'ejs');
-app.use(cors());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json())
-app.use(cookieParser());
-app.use(session);
-app.use(main)
-app.use(loginRoute)
+// Create a proxy server
+const proxy = httpProxy.createProxyServer({});
 
-app.use("/src",(req,res,next)=>{
-  // if(req.session==undefined){
-  //   res.sendFile(__dirname+"/public/login.html");
-  //   return;
-  // }
-next();
+// Create an HTTP server
+const server = http.createServer((req, res) => {
+  console.log('Request received:', req.url);
 
-})
-app.use("/",express.static(""))
-app.get("/favicon.ico",(req,res)=>res.sendFile(__dirname+"/public/image.png"))
-app.get("/sitemap.xml",(req,res)=>res.sendFile(__dirname+"/public/sitemap.xml"))
-app.get("/home",(req,res)=>res.render('home'))
-app.use("/src",express.static("public"));
-//AIzaSyCdMdqblqRy4ObnC7IFI-xTz5rjO9qS0zc
-app.get("/", (req, res) => {
-  
-  if(req.session==undefined)res.sendFile(__dirname+"/public/login.html");
-  else{res.sendFile(__dirname + "/public/index.html");req.session.isFirst=false}   
-save(req);
+  // Proxy the request to the target server
+  proxy.web(req, res, { target: 'http://example.com' });
 });
 
+// Handle errors in the proxy
+proxy.on('error', (err, req, res) => {
+  console.error('Proxy Error:', err);
+  res.writeHead(500, { 'Content-Type': 'text/plain' });
+  res.end('Something went wrong. Please try again.');
+});
 
+// Listen on port 3000
 const PORT = 3000;
-
-app.listen(PORT, () => {
-  console.log("SERVER ON");
+server.listen(PORT, () => {
+  console.log(`Proxy server is listening on port ${PORT}`);
 });
-setInterval(() => {
-  axios.get("https://ytomp3.onrender.com").catch(err=>{throw err;});
-}, 720000);
